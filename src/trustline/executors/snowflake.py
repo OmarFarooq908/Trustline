@@ -20,7 +20,7 @@ _REQUIRED_ENV_VARS = (
 def _import_connector() -> Any:
     """Import Snowflake connector or raise a clear install error."""
     try:
-        import snowflake.connector  # type: ignore[import-not-found]
+        import snowflake.connector
     except ImportError as exc:
         msg = (
             "snowflake-connector-python is not installed; "
