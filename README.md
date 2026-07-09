@@ -12,15 +12,18 @@ Open-source trust layer for data products — machine-checkable contracts across
 git clone https://github.com/omarfarooq908/trustline.git
 cd trustline
 make install-dev
-make check
-trustline --help
+trustline validate --contracts ./examples/acme_stream/contracts/
+cp examples/acme_stream/profiles.yml.example profiles.yml
+trustline audit --contracts ./examples/acme_stream/contracts/ --target duckdb
 ```
+
+The demo audit exits with code `1` because the ACME Stream dataset intentionally seeds trust failures across pipeline, funnel, semantics, and training checks.
 
 ## What is Trustline?
 
 Trustline sits on top of dbt, Airflow, Snowflake ML, and CRM sync tools. It makes cross-boundary failures — identity funnel collapse, cohort drift, source swaps, queue-vs-state sync gaps — **machine-checkable, versioned, and transferable**.
 
-The v0.1 MVP will deliver a CLI Trust Scorecard (`trustline audit`) that runs a five-phase audit against declarative contracts. Today the repo is a `0.0.1` scaffold — see [getting started](docs/getting-started.md).
+The v0.1 MVP delivers a CLI Trust Scorecard (`trustline audit`) that runs a five-phase audit against declarative contracts. See [getting started](docs/getting-started.md) for the full walkthrough.
 
 ## Documentation
 

@@ -93,3 +93,27 @@ def load_profile(name: str, profiles_path: Path = Path("profiles.yml")) -> Profi
         msg = f"profile not found: {name}"
         raise TrustlineError(msg)
     return profile
+
+
+def resolve_profiles_path(path: Path | None = None) -> Path:
+    """Resolve the profiles file, falling back to the ACME example."""
+    if path is not None:
+        return path
+    default = Path("profiles.yml")
+    if default.is_file():
+        return default
+    example = Path("examples/acme_stream/profiles.yml.example")
+    if example.is_file():
+        return example
+    return default
+
+
+def resolve_duckdb_path(profile: Profile, profiles_path: Path) -> Path:
+    """Resolve a profile DuckDB path relative to the profiles file."""
+    if not profile.duckdb_path:
+        msg = f"profile {profile.name!r} is missing duckdb_path"
+        raise TrustlineError(msg)
+    database = Path(profile.duckdb_path)
+    if not database.is_absolute():
+        database = (profiles_path.parent / database).resolve()
+    return database

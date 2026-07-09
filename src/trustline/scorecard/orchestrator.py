@@ -13,7 +13,8 @@ from trustline.scorecard.phase1_pipeline import run_phase1_pipeline
 from trustline.scorecard.phase2_funnel import run_phase2_funnel
 from trustline.scorecard.phase3_semantics import run_phase3_semantics
 from trustline.scorecard.phase4_training import run_phase4_training
-from trustline.scorecard.types import ScorecardResult
+from trustline.scorecard.phase5_brief import run_phase5_brief
+from trustline.scorecard.types import PhaseResult, ScorecardResult
 
 
 def run_audit(
@@ -52,4 +53,40 @@ def run_audit(
         verdict=aggregate_verdict([phase.status for phase in phases]),
         phases=phases,
         evidence=evidence,
+    )
+
+
+def _phase_evidence(phases: tuple[PhaseResult, ...]) -> dict[str, Any]:
+    return {
+        phase.name: {
+            "status": phase.status,
+            "checks": [
+                {
+                    "check_id": check.check_id,
+                    "status": check.status,
+                    "actual": check.actual,
+                    "expected": check.expected,
+                }
+                for check in phase.checks
+            ],
+        }
+        for phase in phases
+    }
+
+
+def run_full_audit(
+    contracts: list[FunnelContract | CohortManifest],
+    audit_profile: AuditProfile | None,
+    executor: Executor,
+    profile: Profile,
+) -> ScorecardResult:
+    """Run phases 1–5 and return the complete scorecard."""
+    result = run_audit(contracts, audit_profile, executor, profile)
+    phase5 = run_phase5_brief(result.phases)
+    phases = (*result.phases, phase5)
+    return ScorecardResult(
+        verdict=result.verdict,
+        phases=phases,
+        evidence=_phase_evidence(phases),
+        generated_at=result.generated_at,
     )

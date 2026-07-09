@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from trustline.config import Profile, load_profile, load_profiles
+from trustline.config import Profile, load_profile, load_profiles, resolve_duckdb_path
 from trustline.exceptions import TrustlineError, ValidationError
 
 FIXTURES_DIR = Path(__file__).resolve().parents[2] / "fixtures" / "profiles"
@@ -21,8 +21,16 @@ def test_load_profile_default_from_example() -> None:
         target="duckdb",
         database="main",
         schema="main",
-        duckdb_path="examples/acme_stream/demo.duckdb",
+        duckdb_path="demo.duckdb",
     )
+
+
+def test_resolve_duckdb_path_relative_to_profiles_file() -> None:
+    """DuckDB paths should resolve relative to the profiles file directory."""
+    profile = load_profile("default", EXAMPLE_PROFILES)
+    resolved = resolve_duckdb_path(profile, EXAMPLE_PROFILES)
+    assert resolved.name == "demo.duckdb"
+    assert resolved.parent == EXAMPLE_PROFILES.parent
 
 
 def test_load_profiles_returns_all_entries() -> None:

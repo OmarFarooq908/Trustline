@@ -4,7 +4,7 @@ default:
   target: duckdb
   database: main
   schema: main
-  duckdb_path: examples/acme_stream/demo.duckdb
+  duckdb_path: demo.duckdb
 
 acme_prod:
   target: snowflake
