@@ -17,8 +17,6 @@ from trustline.reporters.scoring import (
 )
 from trustline.scorecard.types import PhaseResult, ScorecardResult
 
-_STATUS_SYMBOLS = {"pass": "✅", "warn": "⚠️", "fail": "❌", "skip": "⏭️"}
-
 
 def _color_enabled(*, no_color: bool) -> bool:
     if no_color:
@@ -36,9 +34,7 @@ def _score_bar(score: int, *, width: int = 10) -> str:
 
 
 def _phase_status_label(phase: PhaseResult) -> str:
-    symbol = _STATUS_SYMBOLS.get(phase.status, "")
-    label = phase.status.upper()
-    return f"{symbol} {label}".strip()
+    return phase.status.upper()
 
 
 def _phase_annotation(phase: PhaseResult) -> str | None:
@@ -50,9 +46,9 @@ def _phase_annotation(phase: PhaseResult) -> str | None:
             continue
         if check.check_id == "audit.crm_coverage" and isinstance(check.actual, (int, float)):
             missing = round(100 - float(check.actual))
-            return f"← {missing}% of queued contacts missing from mirror"
+            return f"note: {missing}% of queued contacts missing from mirror"
         if check.actual is not None and check.expected is not None:
-            return f"← {check.check_id} reported {check.status}"
+            return f"note: {check.check_id} reported {check.status}"
     return None
 
 
@@ -93,4 +89,8 @@ def render_scorecard_console(
 
     console.print(table)
     console.print()
-    console.print(Text(recommendation_for(result), style="bold" if use_color else None))
+    recommendation = recommendation_for(result)
+    if use_color:
+        console.print(Text(recommendation, style="bold"))
+    else:
+        console.print(recommendation)

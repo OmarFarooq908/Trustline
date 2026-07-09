@@ -25,7 +25,7 @@ def test_phase_annotation_for_crm_coverage() -> None:
             ),
         ),
     )
-    assert _phase_annotation(phase) == "← 73% of queued contacts missing from mirror"
+    assert _phase_annotation(phase) == "note: 73% of queued contacts missing from mirror"
 
 
 def test_render_scorecard_console_includes_trust_score() -> None:
@@ -53,7 +53,9 @@ def test_render_scorecard_console_includes_trust_score() -> None:
     )
 
     def _console_factory(*_args: object, **_kwargs: object) -> Console:
-        return Console(file=buffer, width=120, force_terminal=True, color_system=None, no_color=True)
+        return Console(
+            file=buffer, width=120, force_terminal=True, color_system=None, no_color=True
+        )
 
     from unittest.mock import patch
 
