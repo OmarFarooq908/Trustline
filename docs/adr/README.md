@@ -20,5 +20,6 @@ Technical ADRs documenting implementation decisions for Trustline.
 | [016](016-pypi-package-name.md) | PyPI package name |
 | [017](017-scaffold-version.md) | Scaffold version 0.0.1 |
 | [018](018-coverage-threshold.md) | 85% coverage threshold |
+| [019](019-v01-audit-profile.md) | v0.1 audit profile and DuckDB-first executor |
 
 New ADRs: add a file under `docs/adr/` and update this index. Breaking changes require an RFC (see [triage.md](../triage.md)).
