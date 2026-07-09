@@ -16,21 +16,7 @@ This document describes the technical architecture for Trustline: repository str
 
 ## Repository Structure
 
-### Current (v0.0.1 scaffold)
-
-```
-trustline/
-├── pyproject.toml
-├── Makefile
-├── src/trustline/          # CLI stubs (validate, audit)
-├── tests/
-├── schemas/                # placeholder until Phase 1
-├── examples/acme_stream/
-├── integrations/           # dbt, GitHub Actions stubs
-└── docs/
-```
-
-### Target (v0.1 MVP)
+### Current (v0.1)
 
 ```
 trustline/
@@ -39,79 +25,27 @@ trustline/
 │   └── trustline/
 │       ├── __init__.py
 │       ├── cli/
-│       │   ├── __init__.py
 │       │   ├── main.py              # typer app entrypoint
 │       │   ├── validate.py          # trustline validate
 │       │   └── audit.py             # trustline audit
 │       ├── contracts/
-│       │   ├── __init__.py
-│       │   ├── loader.py            # YAML load + parse
-│       │   ├── validator.py         # JSON Schema validation
-│       │   └── models.py            # Pydantic/dataclass models
 │       ├── compiler/
-│       │   ├── __init__.py
-│       │   ├── funnel.py            # FunnelContract → SQL
-│       │   ├── cohort.py            # CohortManifest → SQL
-│       │   └── templates.py         # Jinja2 template rendering
 │       ├── executors/
-│       │   ├── __init__.py
-│       │   ├── base.py              # Abstract executor interface
-│       │   ├── snowflake.py         # Snowflake connector
-│       │   └── duckdb.py            # DuckDB local executor
 │       ├── scorecard/
-│       │   ├── __init__.py
-│       │   ├── orchestrator.py      # 5-phase audit runner
-│       │   ├── phase1_pipeline.py
-│       │   ├── phase2_funnel.py
-│       │   ├── phase3_semantics.py
-│       │   ├── phase4_training.py
-│       │   └── phase5_brief.py
 │       ├── reporters/
-│       │   ├── __init__.py
-│       │   ├── markdown.py
-│       │   ├── json_report.py
-│       │   └── brief.py             # Leadership brief template
 │       └── integrations/
-│           ├── __init__.py
-│           ├── slack.py
-│           └── github_actions.py
 ├── schemas/
-│   ├── funnel.schema.json
-│   ├── cohort.schema.json
-│   └── common.schema.json           # Shared definitions
-├── templates/
-│   └── sql/
-│       ├── funnel_stage_count.sql.j2
-│       ├── funnel_retention.sql.j2
-│       ├── cohort_source_parity.sql.j2
-│       ├── score_distribution.sql.j2
-│       ├── crm_coverage_gap.sql.j2
-│       └── source_swap_volume.sql.j2
-├── examples/
-│   └── acme_stream/
-│       ├── contracts/
-│       │   ├── training_positives.yaml
-│       │   ├── propensity_cohort_q2.yaml
-│       │   └── source_swap_newplayer.yaml
-│       ├── sql/
-│       │   └── seed_data.sql
-│       ├── profiles.yml.example
-│       └── demo.duckdb
+├── templates/sql/
+├── examples/acme_stream/
 ├── integrations/
-│   ├── dbt/
-│   │   └── macros/
-│   │       └── trustline_funnel.sql  # v0.2
-│   └── github-actions/
-│       └── trustline-audit.yml
-├── tests/
-│   ├── test_validate.py
-│   ├── test_compiler.py
-│   ├── test_scorecard.py
-│   └── fixtures/
-│       └── acme_contracts/
 └── docs/
-    └── ...
 ```
+
+### Planned (v0.2+)
+
+- `integrations/dbt/macros/` — dbt macro for funnel contracts
+- Python library API (`from trustline import audit, validate`)
+- BigQuery and Postgres executors
 
 ---
 

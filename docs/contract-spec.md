@@ -644,8 +644,6 @@ Breaking schema changes require:
 
 ## Validation Usage
 
-> **v0.1 (planned):** `trustline validate` is not implemented in `0.0.1`. The commands below describe the target CLI.
-
 ### CLI
 
 ```bash
@@ -653,7 +651,7 @@ Breaking schema changes require:
 trustline validate --contracts ./examples/acme_stream/contracts/
 ```
 
-Additional flags planned for v0.1: `--file` (single contract), `--strict` (warnings as errors).
+Additional flags: `--file` (single contract), `--strict` (warnings as errors).
 
 ### CI (GitHub Actions)
 

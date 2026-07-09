@@ -9,10 +9,20 @@ CLI for validating YAML data-product contracts and running a five-phase trust au
 ## Quickstart
 
 ```bash
+pip install trustline
+trustline validate --contracts ./examples/acme_stream/contracts/
+trustline audit \
+  --contracts ./examples/acme_stream/contracts/ \
+  --target duckdb \
+  --profiles ./examples/acme_stream/profiles.yml.example
+```
+
+Clone the repository to run the bundled ACME Stream fixture locally:
+
+```bash
 git clone https://github.com/omarfarooq908/trustline.git
 cd trustline
 make install-dev
-trustline validate --contracts ./examples/acme_stream/contracts/
 trustline audit \
   --contracts ./examples/acme_stream/contracts/ \
   --target duckdb \

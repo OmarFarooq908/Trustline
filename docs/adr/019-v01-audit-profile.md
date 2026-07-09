@@ -65,6 +65,6 @@ This aligns with [ADR-001](001-snowflake-first.md) (Snowflake for production, Du
 
 ## Related
 
-- [IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md) — Section 4 (AuditProfile mapping), Section 9 (Snowflake strategy)
-- [MILESTONES.md](../MILESTONES.md) — TRUST-013
+- [mvp-scope.md](../mvp-scope.md) — v0.1 audit profile scope and ACME fixture
+- [architecture.md](../architecture.md) — Snowflake and DuckDB executor strategy
 - [ADR-009](009-module-layout.md) — `compiler/`, `executors/` layout

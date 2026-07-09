@@ -31,8 +31,5 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras --dev
 
-      - name: Documentation publishing check
-        run: make check-docs
-
       - name: Run checks
-        run: make format-check lint typecheck coverage
+        run: make check

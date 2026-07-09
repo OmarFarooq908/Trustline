@@ -1,10 +1,4 @@
-# Release workflow — stub until v0.1.0
-#
-# Triggered on version tags (v*.*.*).
-# Planned steps:
-#   1. uv build
-#   2. Publish to PyPI (PYPI_API_TOKEN secret)
-#   3. Create GitHub Release with CHANGELOG excerpt
+# Publish to PyPI and create a GitHub Release on version tags (v*.*.*).
 
 name: Release
 
@@ -13,11 +7,15 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: false  # Enable when ready to publish v0.1.0
+    environment: pypi
     steps:
       - uses: actions/checkout@v4
 
@@ -27,10 +25,11 @@ jobs:
       - name: Build package
         run: uv build
 
-      # - name: Publish to PyPI
-      #   env:
-      #     PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-      #   run: uv publish
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
 
-      # - name: Create GitHub Release
-      #   uses: softprops/action-gh-release@v2
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*

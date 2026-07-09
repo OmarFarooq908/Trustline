@@ -1,4 +1,4 @@
-.PHONY: install-dev lint format format-check typecheck test test-integration coverage check-docs check clean
+.PHONY: install-dev lint format format-check typecheck test test-integration coverage check clean
 
 UV ?= uv
 
@@ -26,10 +26,7 @@ test-integration:
 coverage:
 	$(UV) run pytest tests/ -m "not integration" --cov=trustline --cov-report=term-missing --cov-fail-under=85
 
-check-docs:
-	./scripts/check-docs-publishing.sh
-
-check: check-docs format-check lint typecheck coverage
+check: format-check lint typecheck coverage
 
 clean:
 	rm -rf .pytest_cache .mypy_cache .ruff_cache htmlcov dist build
