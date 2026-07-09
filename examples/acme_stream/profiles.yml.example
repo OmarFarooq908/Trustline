@@ -1,0 +1,12 @@
+# Copy to profiles.yml (gitignored) and adjust paths for your environment.
+
+default:
+  target: duckdb
+  database: main
+  schema: main
+  duckdb_path: examples/acme_stream/demo.duckdb
+
+acme_prod:
+  target: snowflake
+  database: ANALYTICS
+  schema: ML_STAGING

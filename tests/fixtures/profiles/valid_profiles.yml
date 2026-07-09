@@ -1,0 +1,10 @@
+default:
+  target: duckdb
+  database: main
+  schema: main
+  duckdb_path: /tmp/acme_demo.duckdb
+
+acme_prod:
+  target: snowflake
+  database: ANALYTICS
+  schema: ML_STAGING
