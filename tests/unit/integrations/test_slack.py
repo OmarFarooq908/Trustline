@@ -35,6 +35,12 @@ def test_resolve_webhook_url_raises_when_missing() -> None:
         resolve_webhook_url()
 
 
+def test_resolve_webhook_url_rejects_non_https() -> None:
+    """Webhook URL must use https."""
+    with pytest.raises(TrustlineError, match="https URL"):
+        resolve_webhook_url("http://hooks.slack.com/services/test")
+
+
 def test_build_failure_payload_includes_phase_summary() -> None:
     """Slack payload should summarize failed SQL phases."""
     phase = PhaseResult(

@@ -7,6 +7,7 @@ import os
 import urllib.error
 import urllib.request
 from typing import Any
+from urllib.parse import urlparse
 
 from trustline.exceptions import TrustlineError
 from trustline.scorecard.types import ScorecardResult
@@ -17,6 +18,10 @@ def resolve_webhook_url(explicit_url: str | None = None) -> str:
     webhook_url = explicit_url or os.environ.get("SLACK_WEBHOOK_URL")
     if not webhook_url:
         msg = "Slack webhook URL not configured; set --slack-webhook or SLACK_WEBHOOK_URL"
+        raise TrustlineError(msg)
+    parsed = urlparse(webhook_url)
+    if parsed.scheme != "https" or not parsed.netloc:
+        msg = "Slack webhook URL must be an https URL"
         raise TrustlineError(msg)
     return webhook_url
 
@@ -63,14 +68,14 @@ def notify_audit_failure(
 ) -> None:
     """Post a Slack webhook notification for a failed audit."""
     payload = build_failure_payload(result, title=title)
-    request = urllib.request.Request(  # noqa: S310
+    request = urllib.request.Request(
         webhook_url,
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"},
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:  # noqa: S310
+        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:  # nosec B310
             if response.status >= 400:
                 msg = f"Slack webhook returned HTTP {response.status}"
                 raise TrustlineError(msg)
