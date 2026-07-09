@@ -59,11 +59,18 @@ Compile checks without executing SQL:
 trustline audit --contracts ./examples/acme_stream/contracts/ --target duckdb --dry-run
 ```
 
-Snowflake execution is planned for a later release:
+Snowflake execution uses `trustline[snowflake]` and `SNOWFLAKE_*` environment variables:
 
 ```bash
+pip install 'trustline[snowflake]'
+export SNOWFLAKE_ACCOUNT=...
+export SNOWFLAKE_USER=...
+export SNOWFLAKE_PASSWORD=...
+export SNOWFLAKE_WAREHOUSE=...
 trustline audit --contracts ./contracts/ --target snowflake --profile acme_prod
 ```
+
+Integration tests are skipped by default; set `TRUSTLINE_RUN_INTEGRATION=1` to enable them.
 
 ## Example contract
 
