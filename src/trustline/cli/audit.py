@@ -27,6 +27,7 @@ from trustline.executors.duckdb import DuckDBExecutor
 from trustline.reporters.brief import render_brief
 from trustline.reporters.json_report import render_scorecard_json
 from trustline.reporters.markdown import render_scorecard
+from trustline.reporters.rich_console import render_scorecard_console
 from trustline.scorecard._common import dialect_for_profile
 from trustline.scorecard.orchestrator import run_full_audit
 from trustline.scorecard.types import ScorecardResult
@@ -79,35 +80,13 @@ def _build_executor(profile: Profile, profiles_path: Path) -> Executor:
     raise TrustlineError(msg)
 
 
-def _count_outcomes(result: ScorecardResult) -> tuple[int, int]:
-    sql_phases = [phase for phase in result.phases if phase.phase_id <= 4]
-    failures = sum(1 for phase in sql_phases if phase.status == "fail")
-    warnings = sum(1 for phase in sql_phases if phase.status == "warn")
-    return failures, warnings
-
-
-def _verdict_summary(result: ScorecardResult) -> str:
-    failures, warnings = _count_outcomes(result)
-    if result.verdict == "pass":
-        return "PASS"
-    if result.verdict == "warn":
-        suffix = "warning" if warnings == 1 else "warnings"
-        return f"WARN ({warnings} {suffix})"
-    fail_suffix = "failure" if failures == 1 else "failures"
-    parts = [f"FAIL ({failures} {fail_suffix}"]
-    if warnings:
-        warn_suffix = "warning" if warnings == 1 else "warnings"
-        parts[0] += f", {warnings} {warn_suffix}"
-    parts[0] += ")"
-    return parts[0]
-
-
-def _print_text_summary(result: ScorecardResult, *, title: str) -> None:
-    typer.echo(f"Trustline Audit — {title}")
-    typer.echo(f"Verdict: {_verdict_summary(result)}\n")
-    for phase in result.phases:
-        dots = "." * max(1, 34 - len(phase.name))
-        typer.echo(f"Phase {phase.phase_id} {phase.name} {dots} {phase.status.upper()}")
+def _print_text_summary(
+    result: ScorecardResult,
+    *,
+    title: str,
+    no_color: bool = False,
+) -> None:
+    render_scorecard_console(result, title=title, no_color=no_color)
 
 
 def _write_reports(result: ScorecardResult, output_dir: Path, *, title: str) -> None:
@@ -204,6 +183,11 @@ def audit(  # noqa: PLR0913
         envvar="SLACK_WEBHOOK_URL",
         help="Slack incoming webhook URL.",
     ),
+    no_color: bool = typer.Option(
+        False,
+        "--no-color",
+        help="Disable ANSI colors in terminal output.",
+    ),
 ) -> None:
     """Run the five-phase trust scorecard against contract YAML."""
     try:
@@ -257,7 +241,7 @@ def audit(  # noqa: PLR0913
         _write_reports(result, reports_dir, title=title)
 
         if output_format in {"text", "both"}:
-            _print_text_summary(result, title=title)
+            _print_text_summary(result, title=title, no_color=no_color)
             typer.echo(f"\nReports written to {reports_dir.resolve()}/")
         if output_format in {"json", "both"}:
             typer.echo(json.dumps(render_scorecard_json(result), indent=2))

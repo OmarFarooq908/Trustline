@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, cast
 
 from trustline.reporters.redact import redact_secrets
+from trustline.reporters.scoring import phase_score, recommendation_for, trust_score
 from trustline.scorecard.types import ScorecardResult
 
 
@@ -57,12 +58,15 @@ def render_scorecard_json(result: ScorecardResult) -> dict[str, Any]:
                 "id": phase.phase_id,
                 "name": phase.name,
                 "status": phase.status,
+                "score": phase_score(phase),
                 "checks": checks,
             }
         )
 
     payload: dict[str, Any] = {
         "verdict": result.verdict,
+        "trust_score": trust_score(result),
+        "recommendation": recommendation_for(result),
         "generated_at": result.generated_at.isoformat(),
         "phases": phases,
         "evidence": result.evidence,

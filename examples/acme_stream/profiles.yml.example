@@ -1,4 +1,5 @@
-# Copy to profiles.yml (gitignored) and adjust paths for your environment.
+# Copy to profiles.yml (gitignored). duckdb_path is relative to this file's directory.
+# When profiles.yml lives at the repo root, demo.duckdb still resolves via the ACME fallback.
 
 default:
   target: duckdb

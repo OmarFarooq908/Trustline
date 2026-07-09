@@ -46,6 +46,9 @@ def test_render_scorecard_json_matches_cli_contract(
     payload = render_scorecard_json(result)
 
     assert payload["verdict"] == "fail"
+    assert "trust_score" in payload
+    assert "recommendation" in payload
+    assert payload["phases"][0]["score"] >= 0
     assert "generated_at" in payload
     assert len(payload["phases"]) == 4
     funnel_phase = next(phase for phase in payload["phases"] if phase["id"] == 2)
