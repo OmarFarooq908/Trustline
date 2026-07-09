@@ -50,6 +50,8 @@ The `audit` subcommand is not yet implemented. `validate` is available in v0.0.1
 
 See [examples/acme_stream/contracts/training_positives.yaml](../examples/acme_stream/contracts/training_positives.yaml) — a funnel contract for the ACME Stream demo.
 
+Copy [examples/acme_stream/profiles.yml.example](../examples/acme_stream/profiles.yml.example) to `profiles.yml` for warehouse connection settings during `trustline audit` (Phase 6+).
+
 Full specification: [contract-spec.md](contract-spec.md).
 
 ## Development
