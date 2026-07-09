@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest an enhancement for Trustline
+title: "[enhancement]: "
+labels: ["enhancement", "status: needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. Check [roadmap.md](docs/roadmap.md) before opening.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What seam or trust gap does this address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - cli
+        - contracts
+        - compiler
+        - integrations
+        - ci
+        - docs
+    validations:
+      required: true

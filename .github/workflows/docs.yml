@@ -1,0 +1,17 @@
+# MkDocs deploy — stub until Phase 3
+#
+# Planned: MkDocs Material build + GitHub Pages deploy
+
+name: Docs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    if: false  # Enable in Phase 3
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "MkDocs deploy not yet configured"

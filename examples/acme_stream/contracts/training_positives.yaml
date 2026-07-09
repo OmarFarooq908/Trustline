@@ -1,0 +1,39 @@
+apiVersion: trustline.io/v1
+kind: FunnelContract
+metadata:
+  name: training_positives
+  product: acme_propensity_v2
+  owner: platform-team@acme-stream.example
+  labels:
+    team: data-platform
+    env: production
+spec:
+  stages:
+    - name: source_donors
+      description: "Donors with at least one gift in observation window"
+      sql: "SELECT donor_id, email, gift_amount FROM {{ ref('donor_gifts') }} WHERE gift_date >= '2025-01-01'"
+      expect_min_count: 2000
+
+    - name: app_identity_match
+      description: "Donors matched to app user accounts via email"
+      from_stage: source_donors
+      join:
+        table: "{{ ref('app_users') }}"
+        on: email
+        type: left
+      expect_retention_pct: 40
+
+    - name: behavioral_features
+      description: "Matched users with sufficient watch history for feature engineering"
+      from_stage: app_identity_match
+      join:
+        table: "{{ ref('watch_events') }}"
+        on: user_id
+        type: inner
+      expect_retention_pct: 25
+
+  alerts:
+    - on: retention_drop
+      threshold_pct: 5
+      notify: slack
+      channel: "#data-trust-alerts"

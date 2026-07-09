@@ -1,0 +1,18 @@
+"""Trustline — open-source trust layer for data products.
+
+Public API (planned):
+    validate: Validate contract YAML against JSON Schema
+    audit: Run five-phase trust scorecard
+
+Current exports:
+    __version__: Package version string
+"""
+
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("trustline")
+except PackageNotFoundError:
+    __version__ = "0.0.1"
+
+__all__ = ["__version__"]

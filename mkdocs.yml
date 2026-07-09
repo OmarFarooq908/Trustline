@@ -1,0 +1,22 @@
+# MkDocs configuration — stub (Phase 3)
+# See docs/engineering-foundation.md section 10
+
+site_name: Trustline
+site_url: https://omarfarooq908.github.io/trustline/
+repo_url: https://github.com/omarfarooq908/trustline
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Contract Spec: contract-spec.md
+  - Architecture: architecture.md
+  - Roadmap: roadmap.md
+  - MVP Scope: mvp-scope.md
+  - Contributing: contributing.md
+  - Engineering: engineering-foundation.md
+  - ADRs: adr/README.md
+
+docs_dir: docs
