@@ -16,15 +16,14 @@ The scorecard is the **verdict engine**. Contracts are the **spec**.
 
 ## ACME Stream demo scenario
 
-All examples use this synthetic narrative:
+Synthetic fixture in `examples/acme_stream/`.
 
 | Attribute | Value |
 |-----------|-------|
-| Company | ACME Stream (fictional) |
-| Product | Propensity to subscribe (`propensity_score`) |
+| Product | `propensity_score` |
 | Identity funnel | 2,000 donors → 800 app matches → 250 with watch features |
 | Source swap | `LegacyPlayer` → `NewPlayer` on `user_events_silver` |
-| CRM gap | Push queue: 300K rows; contacts mirror: 80K |
+| CRM gap | Push queue: 300 rows; contacts mirror: 80 (demo scale) |
 
 ### Seeded failure modes (demo)
 
@@ -75,7 +74,7 @@ v0.1 is **done** when:
 
 ## Related documents
 
-- [index.md](index.md) — Product overview
+- [index.md](index.md) — Overview
 - [architecture.md](architecture.md) — Technical architecture
 - [contract-spec.md](contract-spec.md) — Contract specification
 - [roadmap.md](roadmap.md) — Post-MVP features

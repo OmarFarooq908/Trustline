@@ -9,12 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Engineering foundation scaffold (`pyproject.toml`, Makefile, CI workflows)
-- Package skeleton: `trustline` CLI with Typer (`--help`, `--version`)
-- Public documentation: `index.md`, `getting-started.md`, `mvp-scope.md`, `roadmap.md`, `contract-spec.md`, `architecture.md`
-- Technical ADRs under `docs/adr/`
-- Community files: CODE_OF_CONDUCT, SECURITY, GOVERNANCE
-- Example ACME Stream funnel contract
+- Five-phase trust scorecard (`trustline audit`) with DuckDB and optional Snowflake execution
+- Contract validation CLI (`trustline validate`) against JSON Schema
+- Identity funnel, cohort manifest, and audit profile compilers
+- Markdown, JSON, and brief reporters for scorecard output
+- ACME Stream demo dataset with seeded cross-boundary failures
+- Slack failure notifications (`--notify slack`, `SLACK_WEBHOOK_URL`)
+- Example GitHub Actions workflow (`integrations/github-actions/trustline-audit.yml`)
+
+### Changed
+
+- README and getting-started quickstart aligned with v0.1 CLI behavior
 
 ## [0.0.1] - 2026-07-09
 

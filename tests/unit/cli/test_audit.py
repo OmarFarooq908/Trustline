@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from typer.testing import CliRunner
@@ -136,3 +136,49 @@ def test_audit_missing_contracts_dir_exits_2(cli_runner: CliRunner) -> None:
         ],
     )
     assert result.exit_code == 2
+
+
+def test_audit_notify_slack_on_failure(cli_runner: CliRunner) -> None:
+    """Failed audit with --notify slack should post to the webhook."""
+    with patch("trustline.integrations.slack.notify_audit_failure") as notify:
+        result = cli_runner.invoke(
+            app,
+            [
+                "audit",
+                "--contracts",
+                str(ACME_CONTRACTS),
+                "--target",
+                "duckdb",
+                "--profiles",
+                str(ACME_PROFILES),
+                "--notify",
+                "slack",
+                "--slack-webhook",
+                "https://hooks.slack.com/services/test",
+                "-o",
+                "json",
+            ],
+        )
+    assert result.exit_code == 1
+    notify.assert_called_once()
+    assert notify.call_args.args[0] == "https://hooks.slack.com/services/test"
+
+
+def test_audit_unsupported_notify_channel_exits_2(cli_runner: CliRunner) -> None:
+    """Unsupported --notify channel should exit with code 2."""
+    result = cli_runner.invoke(
+        app,
+        [
+            "audit",
+            "--contracts",
+            str(ACME_CONTRACTS),
+            "--target",
+            "duckdb",
+            "--profiles",
+            str(ACME_PROFILES),
+            "--notify",
+            "email",
+        ],
+    )
+    assert result.exit_code == 2
+    assert "unsupported notification channel" in result.stderr

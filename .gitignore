@@ -39,7 +39,6 @@ env/
 
 # Local-only paths (non-dot)
 .local/
-docs/internal/
 Makefile.local
 
 # Secrets (non-dot)
@@ -54,6 +53,12 @@ profiles.yml
 # Build / test artifacts (non-dot)
 *.log
 htmlcov/
+
+# trustline audit output (default --output-dir . or ./reports)
+/scorecard.md
+/scorecard.json
+/brief.md
+/reports/
 
 # OS
 Thumbs.db

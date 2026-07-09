@@ -12,6 +12,24 @@ Trustline contracts are declarative YAML files that describe trust boundaries fo
 - **Machine-validated** — checked against JSON Schema in CI
 - **Executable** — compiled into SQL checks by the Trustline CLI
 
+## Glossary {#glossary}
+
+### FunnelContract
+
+YAML contract defining ordered funnel stages with `expect_min_count` (first stage) or `expect_retention_pct` (subsequent stages joined from a prior stage). Compiled to stage-count and retention SQL checks.
+
+### CohortManifest
+
+YAML contract defining observation/outcome windows, label definition, `sources.training` and `sources.scoring` table refs, `expected_positive_rate`, and `frozen_at`. Compiled to source-parity and positive-rate checks.
+
+### audit_profile.yaml
+
+YAML file (not a `kind` contract) scoped to a product. v0.1 fields: `crm_coverage`, `source_swap`, `score_distribution`. See [ADR-019](adr/019-v01-audit-profile.md).
+
+### DeliveryLineageContract
+
+Planned v0.3 contract kind for train → score → sync queue → CRM mirror lineage and coverage thresholds.
+
 ### Contract kinds
 
 | Kind | `kind` value | Purpose | MVP version |
@@ -479,7 +497,7 @@ spec:
       channel: "#data-trust-alerts"
 ```
 
-**ACME context:** This funnel captures the observed collapse from 2,000 donors → 800 app matches (40%) → 250 with watch features (31% of matched, 12.5% of source). The contract encodes the minimum acceptable retention at each stage.
+**Fixture note:** Demo data seeds 2,000 donors → 800 app matches → 180 with watch events; retention checks use the thresholds above.
 
 ### Example 2: Propensity training cohort (Q2)
 
@@ -522,7 +540,7 @@ spec:
     against holdout set (AUC 0.78). Do not modify windows without ML team approval.
 ```
 
-**ACME context:** When the departing ML engineer left, this manifest did not exist in git. The replacement engineer had to reconstruct label definition and positive rate from a Notion doc. This contract makes the cohort executable and auditable.
+**Fixture note:** Paired with `features_training` / `features_scoring` tables in `demo.duckdb`; source parity check fails when sources diverge.
 
 ### Example 3: NewPlayer source swap
 
@@ -551,7 +569,7 @@ spec:
   volume_threshold_pct: 10
 ```
 
-**ACME context:** The migration from `LegacyPlayer` to `NewPlayer` changed event semantics and caused backfill churn in silver tables. Watch feature counts shifted, causing score distribution changes that stakeholders noticed before the data team did.
+**Fixture note:** `user_events_silver` in the demo seeds unequal LegacyPlayer vs NewPlayer row counts post-cutover.
 
 ### Example 4: CRM delivery coverage (v0.3 preview)
 
@@ -578,7 +596,7 @@ spec:
     description: "At least 95% of scored users must appear in CRM mirror"
 ```
 
-**ACME context:** ACME Stream had 300K rows in the push queue but only 80K contacts in the CRM mirror. The queue was mistaken for authoritative sync state. This contract (v0.3) makes the coverage gap machine-checkable.
+**Fixture note:** Planned v0.3 kind; v0.1 uses `audit_profile.yaml` `crm_coverage` instead. Demo queue/mirror counts: 300 / 80.
 
 ---
 
@@ -657,6 +675,6 @@ All contracts valid.
 
 ## Related Documents
 
-- [index.md](index.md) — Product overview
+- [index.md](index.md) — Overview
 - [architecture.md](architecture.md) — How contracts compile to SQL
 - [mvp-scope.md](mvp-scope.md) — Which contract kinds ship in v0.1

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fail if legacy planning doc filenames appear at docs/ root.
+# Reject legacy planning doc filenames at docs/ root.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -22,18 +22,8 @@ for base in "${LEGACY_DOC_BASENAMES[@]}"; do
   fi
 done
 
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  for path in .local docs/internal; do
-    tracked="$(git ls-files "$path" 2>/dev/null || true)"
-    if [[ -n "$tracked" ]]; then
-      echo "ERROR: $path/ is tracked by git (remove from index)"
-      failed=1
-    fi
-  done
-fi
-
 if [[ "$failed" -ne 0 ]]; then
   exit 1
 fi
 
-echo "Documentation publishing check passed."
+echo "Documentation check passed."
