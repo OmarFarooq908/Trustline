@@ -33,6 +33,30 @@ def test_resolve_duckdb_path_relative_to_profiles_file() -> None:
     assert resolved.parent == EXAMPLE_PROFILES.parent
 
 
+def test_resolve_duckdb_path_falls_back_to_acme_demo_from_repo_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Root profiles.yml with demo.duckdb should find the bundled ACME database."""
+    repo_root = Path(__file__).resolve().parents[3]
+    root_profiles = tmp_path / "profiles.yml"
+    root_profiles.write_text(
+        "default:\n  target: duckdb\n  database: main\n  schema: main\n"
+        "  duckdb_path: demo.duckdb\n",
+        encoding="utf-8",
+    )
+    acme_demo = tmp_path / "examples" / "acme_stream"
+    acme_demo.mkdir(parents=True)
+    (acme_demo / "demo.duckdb").write_bytes(
+        (repo_root / "examples" / "acme_stream" / "demo.duckdb").read_bytes()
+    )
+    monkeypatch.chdir(tmp_path)
+
+    profile = load_profile("default", root_profiles)
+    resolved = resolve_duckdb_path(profile, root_profiles)
+    assert resolved == (acme_demo / "demo.duckdb").resolve()
+
+
 def test_load_profiles_returns_all_entries() -> None:
     """All profiles in a file should be returned."""
     profiles = load_profiles(FIXTURES_DIR / "valid_profiles.yml")

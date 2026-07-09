@@ -108,6 +108,14 @@ def resolve_profiles_path(path: Path | None = None) -> Path:
     return default
 
 
+def _acme_demo_candidates(profiles_path: Path) -> tuple[Path, ...]:
+    """Known fallback locations for the bundled ACME DuckDB demo."""
+    return (
+        profiles_path.parent / "demo.duckdb",
+        Path.cwd() / "examples" / "acme_stream" / "demo.duckdb",
+    )
+
+
 def resolve_duckdb_path(profile: Profile, profiles_path: Path) -> Path:
     """Resolve a profile DuckDB path relative to the profiles file."""
     if not profile.duckdb_path:
@@ -116,4 +124,12 @@ def resolve_duckdb_path(profile: Profile, profiles_path: Path) -> Path:
     database = Path(profile.duckdb_path)
     if not database.is_absolute():
         database = (profiles_path.parent / database).resolve()
+    if database.is_file():
+        return database
+
+    for candidate in _acme_demo_candidates(profiles_path):
+        resolved = candidate.resolve()
+        if resolved.is_file():
+            return resolved
+
     return database

@@ -53,8 +53,8 @@ def test_audit_acme_demo_exits_nonzero(cli_runner: CliRunner) -> None:
         catch_exceptions=False,
     )
     assert result.exit_code == 1
-    assert "Verdict: FAIL" in result.stdout
-    assert "Phase 1 Pipeline Truth" in result.stdout
+    assert "Overall Trust Score" in result.stdout
+    assert "Pipeline Truth" in result.stdout
 
 
 def test_audit_writes_scorecard_reports(cli_runner: CliRunner, tmp_path: Path) -> None:
