@@ -2,10 +2,13 @@
 
 import json
 from pathlib import Path
+from unittest.mock import MagicMock
 
+import pytest
 from typer.testing import CliRunner
 
 from trustline.cli.main import app
+from trustline.config import Profile
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ACME_CONTRACTS = REPO_ROOT / "examples" / "acme_stream" / "contracts"
@@ -78,6 +81,46 @@ def test_audit_writes_scorecard_reports(cli_runner: CliRunner, tmp_path: Path) -
     assert (output_dir / "scorecard.json").is_file()
     payload = json.loads((output_dir / "scorecard.json").read_text(encoding="utf-8"))
     assert payload["verdict"] == "fail"
+
+
+def test_audit_dry_run_compiles_snowflake_checks(cli_runner: CliRunner) -> None:
+    """Snowflake profile dry-run should compile checks without connecting."""
+    result = cli_runner.invoke(
+        app,
+        [
+            "audit",
+            "--contracts",
+            str(ACME_CONTRACTS),
+            "--target",
+            "snowflake",
+            "--profile",
+            "acme_prod",
+            "--profiles",
+            str(REPO_ROOT / "tests" / "fixtures" / "profiles" / "valid_profiles.yml"),
+            "--dry-run",
+        ],
+    )
+    assert result.exit_code == 0
+    assert "Compiled" in result.stdout
+
+
+def test_build_executor_snowflake_uses_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Snowflake executor construction should delegate to from_env."""
+    from trustline.cli import audit as audit_cli
+
+    profile = Profile(
+        name="acme_prod",
+        target="snowflake",
+        database="ANALYTICS",
+        schema="ML_STAGING",
+    )
+    sentinel = object()
+    from_env = MagicMock(return_value=sentinel)
+    monkeypatch.setattr("trustline.executors.snowflake.SnowflakeExecutor.from_env", from_env)
+
+    executor = audit_cli._build_executor(profile, ACME_PROFILES)
+    assert executor is sentinel
+    from_env.assert_called_once_with(profile)
 
 
 def test_audit_missing_contracts_dir_exits_2(cli_runner: CliRunner) -> None:

@@ -71,7 +71,11 @@ def _build_executor(profile: Profile, profiles_path: Path) -> Executor:
             msg = f"DuckDB database not found: {database}"
             raise TrustlineError(msg)
         return DuckDBExecutor(database)
-    msg = f"target {profile.target!r} is not supported in v0.1"
+    if profile.target == "snowflake":
+        from trustline.executors.snowflake import SnowflakeExecutor
+
+        return SnowflakeExecutor.from_env(profile)
+    msg = f"unsupported warehouse target: {profile.target!r}"
     raise TrustlineError(msg)
 
 
