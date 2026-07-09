@@ -1,0 +1,8 @@
+SELECT
+  COUNT(*) AS actual_count
+FROM {{ table_ref }}
+{% if dialect == 'snowflake' %}
+WHERE scored_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+{% else %}
+WHERE scored_at >= CURRENT_TIMESTAMP - INTERVAL 7 DAY
+{% endif %}

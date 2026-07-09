@@ -1,0 +1,9 @@
+SELECT
+  100.0 * counts.mirror_count / NULLIF(counts.sync_count, 0) AS sync_pct,
+  counts.sync_count,
+  counts.mirror_count
+FROM (
+  SELECT
+    (SELECT COUNT(*) FROM {{ sync_table }}) AS sync_count,
+    (SELECT COUNT(*) FROM {{ mirror_table }}) AS mirror_count
+) AS counts

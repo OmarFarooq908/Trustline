@@ -34,6 +34,8 @@ def test_extract_metric_returns_none_for_empty_rows() -> None:
         ("max_drift_pct", 10.5, 10.0, "warn"),
         ("source_parity", 1.0, 1.0, "pass"),
         ("source_parity", 0.0, 1.0, "fail"),
+        ("positive_rate", 0.12, 0.12, "pass"),
+        ("positive_rate", 0.20, 0.12, "fail"),
     ],
 )
 def test_evaluate_expectation(
@@ -42,13 +44,15 @@ def test_evaluate_expectation(
         "min_retention_pct",
         "max_drift_pct",
         "source_parity",
+        "positive_rate",
     ],
     actual: float,
     expected: float,
     status: str,
 ) -> None:
     """Expectation evaluation should return pass, fail, or warn."""
-    expectation = CheckExpectation(kind=kind, value=expected, tolerance=0.5)
+    tolerance = 0.02 if kind == "positive_rate" else 0.5
+    expectation = CheckExpectation(kind=kind, value=expected, tolerance=tolerance)
     assert evaluate_expectation(expectation, actual) == status
 
 

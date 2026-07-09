@@ -1,0 +1,4 @@
+SELECT DISTINCT prior_row.*
+FROM ({{ prior_stage_sql }}) AS prior_row
+{{ join_type }} JOIN {{ join_table }} AS join_row
+  ON prior_row.{{ join_on }} = join_row.{{ join_on }}

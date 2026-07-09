@@ -1,0 +1,13 @@
+crm_coverage:
+  sync_table: "{{ ref('crm_push_queue') }}"
+  mirror_table: "{{ ref('crm_contacts_mirror') }}"
+  expect_sync_pct: 95
+source_swap:
+  table: "{{ ref('user_events_silver') }}"
+  migration:
+    from_source: LegacyPlayer
+    to_source: NewPlayer
+    cutover_date: "2025-03-15"
+  volume_threshold_pct: 10
+score_distribution:
+  table: "{{ ref('propensity_scores_staging') }}"
