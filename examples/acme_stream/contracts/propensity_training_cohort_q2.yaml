@@ -1,0 +1,34 @@
+apiVersion: trustline.io/v1
+kind: CohortManifest
+metadata:
+  name: propensity-training-cohort-q2
+  product: acme_propensity_v2
+  owner: ml-team@acme-stream.example
+  labels:
+    team: ml-engineering
+    quarter: q2-2025
+spec:
+  observation_window:
+    start: "2025-01-01"
+    end: "2025-03-31"
+  outcome_window:
+    start: "2025-04-01"
+    end: "2025-04-30"
+  label:
+    definition: "User subscribed to ACME Stream premium within 30 days of observation window end"
+    sql: |
+      CASE
+        WHEN subscription_date BETWEEN '2025-04-01' AND '2025-04-30'
+        THEN 1
+        ELSE 0
+      END
+  sources:
+    training: "{{ ref('features_training') }}"
+    scoring: "{{ ref('features_scoring') }}"
+  expected_positive_rate: 0.12
+  positive_rate_tolerance: 0.02
+  frozen_at: "2025-05-01T00:00:00Z"
+  model_ref: "acme_propensity_v2_logreg_20250501"
+  notes: |
+    Cohort frozen after Q2 model review. Positive rate of 12% validated
+    against holdout set (AUC 0.78). Do not modify windows without ML team approval.

@@ -1,0 +1,8 @@
+apiVersion: trustline.io/v1
+kind: UnknownContract
+metadata:
+  name: wrong-kind
+  product: acme_propensity_v2
+  owner: platform-team@acme-stream.example
+spec:
+  stages: []

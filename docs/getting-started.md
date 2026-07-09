@@ -23,20 +23,28 @@ trustline --help
 trustline --version
 ```
 
+### `trustline validate`
+
+```bash
+trustline validate --contracts ./examples/acme_stream/contracts/
+```
+
+Validates all contract YAML files in the directory against JSON Schema.
+
 ### Planned commands (v0.1)
 
 ```bash
 # Validate contract YAML against JSON Schema
 trustline validate --contracts ./examples/acme_stream/contracts/
 
-# Run five-phase trust scorecard (DuckDB local demo)
+# Run five-phase trust scorecard (DuckDB local demo — not yet implemented)
 trustline audit --contracts ./examples/acme_stream/contracts/ --target duckdb
 
 # Run against Snowflake
 trustline audit --contracts ./contracts/ --target snowflake --profile acme_prod
 ```
 
-Stub subcommands exit with code 1 until Phase 1 implementation lands.
+The `audit` subcommand is not yet implemented. `validate` is available in v0.0.1+ development builds.
 
 ## Example contract
 

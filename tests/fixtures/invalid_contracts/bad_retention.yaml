@@ -1,0 +1,17 @@
+apiVersion: trustline.io/v1
+kind: FunnelContract
+metadata:
+  name: bad_retention
+  product: acme_propensity_v2
+  owner: platform-team@acme-stream.example
+spec:
+  stages:
+    - name: source_donors
+      sql: "SELECT donor_id FROM {{ ref('donor_gifts') }}"
+      expect_min_count: 2000
+    - name: app_identity_match
+      from_stage: source_donors
+      join:
+        table: "{{ ref('app_users') }}"
+        on: email
+      expect_retention_pct: 150

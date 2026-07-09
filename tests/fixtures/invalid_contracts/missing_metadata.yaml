@@ -1,0 +1,10 @@
+apiVersion: trustline.io/v1
+kind: FunnelContract
+metadata:
+  name: training_positives
+  product: acme_propensity_v2
+spec:
+  stages:
+    - name: source_donors
+      sql: "SELECT donor_id FROM {{ ref('donor_gifts') }}"
+      expect_min_count: 2000
