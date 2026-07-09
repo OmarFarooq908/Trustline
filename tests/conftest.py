@@ -7,6 +7,7 @@ import pytest
 from typer.testing import CliRunner
 
 from trustline.cli.main import app
+from trustline.config import Profile
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ACME_CONTRACTS_DIR = REPO_ROOT / "examples" / "acme_stream" / "contracts"
@@ -37,3 +38,15 @@ def acme_contracts_dir() -> Path:
 def invalid_contracts_dir() -> Path:
     """Path to invalid contract fixtures."""
     return INVALID_CONTRACTS_DIR
+
+
+@pytest.fixture
+def duckdb_profile() -> Profile:
+    """Default DuckDB profile for compiler tests."""
+    return Profile(
+        name="default",
+        target="duckdb",
+        database="main",
+        schema="main",
+        duckdb_path="examples/acme_stream/demo.duckdb",
+    )

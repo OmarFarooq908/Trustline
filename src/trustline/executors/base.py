@@ -12,6 +12,7 @@ ExpectationKind = Literal[
     "max_drift_pct",
     "min_sync_pct",
     "source_parity",
+    "positive_rate",
 ]
 
 
@@ -64,7 +65,15 @@ def extract_metric(rows: list[dict[str, Any]]) -> float | int | None:
         return None
 
     row = rows[0]
-    for key in ("actual", "actual_count", "retention_pct", "sync_pct", "drift_pct", "value"):
+    for key in (
+        "actual",
+        "actual_count",
+        "retention_pct",
+        "sync_pct",
+        "drift_pct",
+        "positive_rate",
+        "value",
+    ):
         candidate = row.get(key)
         if isinstance(candidate, (int, float)):
             return candidate
@@ -96,6 +105,10 @@ def evaluate_expectation(
 
     if expect.kind == "source_parity":
         return "pass" if float(actual) == expect.value else "fail"
+
+    if expect.kind == "positive_rate":
+        tolerance = expect.tolerance if expect.tolerance is not None else 0.02
+        return "pass" if abs(float(actual) - expect.value) <= tolerance else "fail"
 
     return "fail"
 

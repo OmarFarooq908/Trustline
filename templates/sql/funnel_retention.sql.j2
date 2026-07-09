@@ -1,0 +1,12 @@
+SELECT
+  stage_counts.stage_count,
+  stage_counts.prior_count,
+  CASE
+    WHEN stage_counts.prior_count = 0 THEN 0
+    ELSE 100.0 * stage_counts.stage_count / stage_counts.prior_count
+  END AS retention_pct
+FROM (
+  SELECT
+    (SELECT COUNT(*) FROM ({{ stage_sql }}) AS current_stage) AS stage_count,
+    (SELECT COUNT(*) FROM ({{ prior_stage_sql }}) AS prior_stage) AS prior_count
+) AS stage_counts

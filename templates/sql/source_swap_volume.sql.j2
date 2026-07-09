@@ -1,0 +1,30 @@
+SELECT
+  CASE
+    WHEN volumes.pre_volume = 0 THEN 0
+    ELSE 100.0 * ABS(volumes.post_volume - volumes.pre_volume) / volumes.pre_volume
+  END AS drift_pct,
+  volumes.pre_volume,
+  volumes.post_volume
+FROM (
+  SELECT
+    (
+      SELECT COUNT(*)
+      FROM {{ table_ref }}
+      WHERE event_source = '{{ from_source }}'
+        {% if dialect == 'snowflake' %}
+        AND event_date < TO_DATE('{{ cutover_date }}')
+        {% else %}
+        AND event_date < DATE '{{ cutover_date }}'
+        {% endif %}
+    ) AS pre_volume,
+    (
+      SELECT COUNT(*)
+      FROM {{ table_ref }}
+      WHERE event_source = '{{ to_source }}'
+        {% if dialect == 'snowflake' %}
+        AND event_date >= TO_DATE('{{ cutover_date }}')
+        {% else %}
+        AND event_date >= DATE '{{ cutover_date }}'
+        {% endif %}
+    ) AS post_volume
+) AS volumes

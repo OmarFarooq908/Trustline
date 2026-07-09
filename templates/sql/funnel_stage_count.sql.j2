@@ -1,0 +1,4 @@
+SELECT COUNT(*) AS actual_count
+FROM (
+{{ stage_sql }}
+) AS {{ stage_name }}

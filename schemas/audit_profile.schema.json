@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trustline.io/schemas/v1/audit_profile.schema.json",
+  "title": "AuditProfile",
+  "type": "object",
+  "required": ["crm_coverage", "source_swap"],
+  "additionalProperties": false,
+  "properties": {
+    "crm_coverage": {
+      "type": "object",
+      "required": ["sync_table", "mirror_table", "expect_sync_pct"],
+      "additionalProperties": false,
+      "properties": {
+        "sync_table": { "type": "string", "minLength": 1 },
+        "mirror_table": { "type": "string", "minLength": 1 },
+        "expect_sync_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "source_swap": {
+      "type": "object",
+      "required": ["table", "migration"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string", "minLength": 1 },
+        "migration": {
+          "type": "object",
+          "required": ["from_source", "to_source", "cutover_date"],
+          "additionalProperties": false,
+          "properties": {
+            "from_source": { "type": "string", "minLength": 1 },
+            "to_source": { "type": "string", "minLength": 1 },
+            "cutover_date": { "type": "string", "format": "date" }
+          }
+        },
+        "volume_threshold_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 10
+        }
+      }
+    },
+    "score_distribution": {
+      "type": "object",
+      "required": ["table"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
