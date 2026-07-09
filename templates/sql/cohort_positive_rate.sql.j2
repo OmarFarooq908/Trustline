@@ -1,0 +1,2 @@
+SELECT AVG(CAST({{ label_sql }} AS DOUBLE)) AS positive_rate
+FROM {{ training_table }}

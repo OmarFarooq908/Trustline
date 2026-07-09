@@ -28,8 +28,13 @@ def compile_cohort_checks(
     )
 
     label_sql = contract.spec.label.sql or "1"
-    positive_rate_sql = (
-        f"SELECT AVG(CAST({label_sql} AS DOUBLE)) AS positive_rate FROM {training_table}"
+    positive_rate_sql = render_template(
+        "cohort_positive_rate.sql.j2",
+        {
+            "label_sql": label_sql,
+            "training_table": training_table,
+        },
+        dialect,
     )
 
     return [

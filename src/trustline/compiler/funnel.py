@@ -13,6 +13,7 @@ def _stage_subquery(
     stage: FunnelStage,
     stage_queries: dict[str, str],
     profile: Profile,
+    dialect: str,
 ) -> str:
     """Build the SQL subquery that materializes a funnel stage."""
     if stage.sql is not None:
@@ -22,23 +23,25 @@ def _stage_subquery(
         msg = f"stage {stage.name!r} is missing sql or join configuration"
         raise AuditError(msg)
 
-    prior = stage_queries[stage.from_stage]
-    join_table = resolve_refs(stage.join.table, profile)
-    join_type = stage.join.type.upper()
-    join_on = stage.join.on
-    return f"""
-SELECT DISTINCT prior_row.*
-FROM ({prior}) AS prior_row
-{join_type} JOIN {join_table} AS join_row
-  ON prior_row.{join_on} = join_row.{join_on}
-""".strip()
+    return render_template(
+        "funnel_stage_join.sql.j2",
+        {
+            "prior_stage_sql": stage_queries[stage.from_stage],
+            "join_table": resolve_refs(stage.join.table, profile),
+            "join_type": stage.join.type.upper(),
+            "join_on": stage.join.on,
+        },
+        dialect,
+    )
 
 
-def _build_stage_queries(contract: FunnelContract, profile: Profile) -> dict[str, str]:
+def _build_stage_queries(
+    contract: FunnelContract, profile: Profile, dialect: str
+) -> dict[str, str]:
     """Compile all stage subqueries in funnel order."""
     queries: dict[str, str] = {}
     for stage in contract.spec.stages:
-        queries[stage.name] = _stage_subquery(stage, queries, profile)
+        queries[stage.name] = _stage_subquery(stage, queries, profile, dialect)
     return queries
 
 
@@ -49,7 +52,7 @@ def compile_funnel_checks(
 ) -> list[CompiledCheck]:
     """Compile funnel stage count and retention checks."""
     checks: list[CompiledCheck] = []
-    stage_queries = _build_stage_queries(contract, profile)
+    stage_queries = _build_stage_queries(contract, profile, dialect)
 
     for index, stage in enumerate(contract.spec.stages):
         stage_sql = stage_queries[stage.name]
