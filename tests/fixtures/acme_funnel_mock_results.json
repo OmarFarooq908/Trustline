@@ -1,0 +1,21 @@
+{
+  "funnel": {
+    "source_donors": 2000,
+    "app_identity_match": 2000,
+    "behavioral_features": 180
+  },
+  "crm_coverage": {
+    "sync_count": 300,
+    "mirror_count": 80,
+    "sync_pct": 26.67
+  },
+  "source_swap": {
+    "pre_volume": 1000,
+    "post_volume": 1110,
+    "drift_pct": 11.0
+  },
+  "cohort": {
+    "source_parity": 0,
+    "positive_rate": 0.12
+  }
+}

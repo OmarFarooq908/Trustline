@@ -1,6 +1,6 @@
 # Getting Started
 
-Install Trustline, run the test suite, and explore the CLI skeleton.
+Install Trustline, validate contracts, and run the ACME Stream trust audit locally.
 
 ## Prerequisites
 
@@ -31,26 +31,43 @@ trustline validate --contracts ./examples/acme_stream/contracts/
 
 Validates all contract YAML files in the directory against JSON Schema.
 
-### Planned commands (v0.1)
+### `trustline audit`
+
+Copy the example profiles file, then run the DuckDB demo audit:
 
 ```bash
-# Validate contract YAML against JSON Schema
-trustline validate --contracts ./examples/acme_stream/contracts/
-
-# Run five-phase trust scorecard (DuckDB local demo — not yet implemented)
+cp examples/acme_stream/profiles.yml.example profiles.yml
 trustline audit --contracts ./examples/acme_stream/contracts/ --target duckdb
-
-# Run against Snowflake
-trustline audit --contracts ./contracts/ --target snowflake --profile acme_prod
 ```
 
-The `audit` subcommand is not yet implemented. `validate` is available in v0.0.1+ development builds.
+The ACME demo uses the committed `examples/acme_stream/demo.duckdb` database and exits with code `1` when seeded failures are detected (expected for the demo).
+
+Write reports to a directory:
+
+```bash
+trustline audit \
+  --contracts ./examples/acme_stream/contracts/ \
+  --target duckdb \
+  --output-dir ./reports \
+  -o json
+cat ./reports/scorecard.md
+```
+
+Compile checks without executing SQL:
+
+```bash
+trustline audit --contracts ./examples/acme_stream/contracts/ --target duckdb --dry-run
+```
+
+Snowflake execution is planned for a later release:
+
+```bash
+trustline audit --contracts ./contracts/ --target snowflake --profile acme_prod
+```
 
 ## Example contract
 
 See [examples/acme_stream/contracts/training_positives.yaml](../examples/acme_stream/contracts/training_positives.yaml) — a funnel contract for the ACME Stream demo.
-
-Copy [examples/acme_stream/profiles.yml.example](../examples/acme_stream/profiles.yml.example) to `profiles.yml` for warehouse connection settings during `trustline audit` (Phase 6+).
 
 Full specification: [contract-spec.md](contract-spec.md).
 
@@ -60,6 +77,7 @@ Full specification: [contract-spec.md](contract-spec.md).
 make test          # fast unit tests
 make format        # auto-format
 make check         # all CI gates
+./scripts/build-demo-duckdb.sh   # rebuild demo.duckdb from seed SQL
 ```
 
 See [contributing.md](contributing.md) for the full workflow.
