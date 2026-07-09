@@ -31,7 +31,7 @@ trustline/                          # repository root
 │   └── workflows/
 │       ├── ci.yml                  # required: lint, typecheck, test, coverage
 │       ├── security.yml            # pip-audit, bandit
-│       ├── release.yml             # stub until v0.1.0
+│       ├── release.yml             # PyPI publish on version tags
 │       └── docs.yml                # stub — MkDocs Phase 3
 ├── .gitignore
 ├── .pre-commit-config.yaml
@@ -102,7 +102,7 @@ trustline/                          # repository root
 
 ### Public API surface
 
-v0.0.1 skeleton exports `__version__` only. Future public API (v0.2+): `validate`, `audit`. Document planned exports in `src/trustline/__init__.py` docstring.
+v0.1.0 exports `__version__` only. Library API (`validate`, `audit`) is planned for v0.2+.
 
 ---
 
@@ -315,21 +315,20 @@ make coverage          # with coverage gate
 | Jobs | `pip-audit`, `bandit -r src -ll` |
 | Job name | **`Security`** |
 
-#### `release.yml` — stub
+#### `release.yml`
 
 | Setting | Value |
 |---------|-------|
 | Trigger | Push tags `v*` |
-| Planned | `uv build` → PyPI (`PYPI_API_TOKEN`) → GitHub Release |
-| Status | Stub with comments until v0.1.0 |
+| Steps | `uv build` → PyPI (trusted publishing) → GitHub Release |
 
-#### `docs.yml` — stub
+#### `docs.yml`
 
 | Setting | Value |
 |---------|-------|
-| Trigger | Push to `main` (when enabled) |
+| Trigger | Manual (`workflow_dispatch`) |
 | Planned | MkDocs Material → GitHub Pages |
-| Status | Phase 3 |
+| Status | Disabled until MkDocs is configured |
 
 ### Branch protection (required checks)
 
@@ -483,7 +482,7 @@ See [triage.md](triage.md) for full process.
 ### Semver
 
 - Start at **v0.1.0** for MVP launch
-- Scaffold uses **v0.0.1** (pre-release)
+- Scaffold shipped as **v0.0.1**; MVP release is **v0.1.0**
 - 0.x allows breaking changes; document in CHANGELOG
 
 ### PyPI
@@ -569,25 +568,6 @@ This repository will **not**:
 | Ship generated SQL without snapshot tests | Regression risk (Phase 1+) |
 | Commit directly to `main` bypassing CI | Quality gate |
 | Use `print()` in library code | Use `logging` |
-
----
-
-## 14. Foundation Rollout Phases
-
-| Phase | Duration | Deliverable |
-|-------|----------|-------------|
-| **Phase 0** | Day 1 | `engineering-foundation.md` + scaffold + green `make check` + CI |
-| **Phase 1** | Post-scaffold | JSON Schema in `schemas/`, contract parser, `trustline validate` |
-| **Phase 2** | Post-scaffold | MVP scope per [mvp-scope.md](mvp-scope.md) |
-| **Phase 3** | Post-MVP | dbt macro, GitHub Action, MkDocs deploy, devcontainer |
-
-### Phase 0 exit criteria
-
-- [ ] `make install-dev && make check` passes locally
-- [ ] `CI` workflow green on `main`
-- [ ] `trustline --help` and `trustline --version` work
-- [ ] contributing.md enables 15-minute onboarding
-- [ ] No secrets in artifacts
 
 ---
 

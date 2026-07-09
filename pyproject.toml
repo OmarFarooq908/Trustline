@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "trustline"
-version = "0.0.1"
+version = "0.1.0"
 description = "Open-source trust layer for data products — machine-checkable contracts across ETL, ML, and delivery seams."
 readme = "README.md"
 license = "Apache-2.0"
@@ -12,7 +12,7 @@ requires-python = ">=3.11"
 authors = [{ name = "Omar Farooq" }]
 keywords = ["data-quality", "mlops", "data-contracts", "dbt", "snowflake"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",

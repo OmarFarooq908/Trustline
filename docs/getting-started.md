@@ -8,6 +8,13 @@
 ## Install
 
 ```bash
+pip install trustline
+trustline --version
+```
+
+For development from source:
+
+```bash
 git clone https://github.com/omarfarooq908/trustline.git
 cd trustline
 make install-dev

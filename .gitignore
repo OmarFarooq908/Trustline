@@ -1,3 +1,20 @@
+# Dotfiles and dot-directories — ignored by default; whitelist repo config only.
+# Keeps local IDE state (.cursor/, .idea/), caches (.pytest_cache/), and notes (.local/) out of git.
+.*
+!/.gitignore
+!/.github/
+!/.github/**
+!/.editorconfig
+!/.pre-commit-config.yaml
+!/.env.example
+!/.vscode/
+!/.vscode/extensions.json
+/.vscode/settings.json
+/.vscode/launch.json
+
+# Local overrides (non-dot)
+Makefile.local
+
 # Python
 __pycache__/
 *.py[cod]
@@ -9,7 +26,6 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
 lib/
 lib64/
 parts/
@@ -24,24 +40,7 @@ venv/
 ENV/
 env/
 
-# Dotfiles and dot-directories — ignore by default, whitelist repo config
-.*
-!/.gitignore
-!/.github/
-!/.github/**
-!/.editorconfig
-!/.pre-commit-config.yaml
-!/.env.example
-!/.vscode/
-!/.vscode/extensions.json
-/.vscode/settings.json
-/.vscode/launch.json
-
-# Local-only paths (non-dot)
-.local/
-Makefile.local
-
-# Secrets (non-dot)
+# Secrets
 *.pem
 snowflake_credentials.json
 profiles.yml
@@ -50,7 +49,7 @@ profiles.yml
 *.duckdb
 !examples/acme_stream/demo.duckdb
 
-# Build / test artifacts (non-dot)
+# Build / test artifacts
 *.log
 htmlcov/
 
@@ -65,4 +64,3 @@ Thumbs.db
 *.swp
 *.swo
 *~
-.DS_Store
