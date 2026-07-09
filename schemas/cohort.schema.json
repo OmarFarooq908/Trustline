@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trustline.io/schemas/v1/cohort.schema.json",
+  "title": "CohortManifest",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "trustline.io/v1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "CohortManifest"
+    },
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "observation_window",
+        "outcome_window",
+        "label",
+        "sources",
+        "expected_positive_rate",
+        "frozen_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "observation_window": {
+          "$ref": "common.schema.json#/$defs/dateWindow"
+        },
+        "outcome_window": {
+          "$ref": "common.schema.json#/$defs/dateWindow"
+        },
+        "label": {
+          "type": "object",
+          "required": ["definition"],
+          "additionalProperties": false,
+          "properties": {
+            "definition": {
+              "type": "string",
+              "description": "Human-readable label definition."
+            },
+            "sql": {
+              "type": "string",
+              "description": "SQL expression for label generation."
+            }
+          }
+        },
+        "sources": {
+          "type": "object",
+          "required": ["training", "scoring"],
+          "additionalProperties": false,
+          "properties": {
+            "training": {
+              "type": "string",
+              "description": "Training feature table reference."
+            },
+            "scoring": {
+              "type": "string",
+              "description": "Scoring feature table reference."
+            }
+          }
+        },
+        "expected_positive_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Expected positive label rate."
+        },
+        "positive_rate_tolerance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.02,
+          "description": "Acceptable deviation from expected positive rate."
+        },
+        "frozen_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when cohort was frozen. Immutable."
+        },
+        "model_ref": {
+          "type": "string",
+          "description": "Reference to model artifact or registry entry."
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

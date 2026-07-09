@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trustline.io/schemas/v1/funnel.schema.json",
+  "title": "FunnelContract",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "trustline.io/v1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "FunnelContract"
+    },
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "spec": {
+      "type": "object",
+      "required": ["stages"],
+      "additionalProperties": false,
+      "properties": {
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/stage"
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/alert"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stage": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{0,62}$"
+        },
+        "sql": {
+          "type": "string",
+          "description": "SQL for the first stage (source). Uses ref() syntax."
+        },
+        "from_stage": {
+          "type": "string",
+          "description": "Name of the prior stage to join from."
+        },
+        "join": {
+          "type": "object",
+          "required": ["table", "on"],
+          "additionalProperties": false,
+          "properties": {
+            "table": {
+              "type": "string",
+              "description": "Table to join. Uses ref() syntax."
+            },
+            "on": {
+              "type": "string",
+              "description": "Join key column name."
+            },
+            "type": {
+              "type": "string",
+              "enum": ["inner", "left"],
+              "default": "inner"
+            }
+          }
+        },
+        "expect_min_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum row count at this stage."
+        },
+        "expect_retention_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Minimum retention percentage from prior stage."
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["sql", "expect_min_count"],
+          "not": { "required": ["from_stage"] }
+        },
+        {
+          "required": ["from_stage", "join", "expect_retention_pct"],
+          "not": { "required": ["sql"] }
+        }
+      ]
+    },
+    "alert": {
+      "type": "object",
+      "required": ["on", "threshold_pct", "notify"],
+      "additionalProperties": false,
+      "properties": {
+        "on": {
+          "type": "string",
+          "enum": ["retention_drop", "count_below_min", "stage_empty"]
+        },
+        "threshold_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "notify": {
+          "type": "string",
+          "enum": ["slack", "email", "pagerduty"]
+        },
+        "channel": {
+          "type": "string",
+          "description": "Notification channel override."
+        }
+      }
+    }
+  }
+}

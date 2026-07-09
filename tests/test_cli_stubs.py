@@ -5,13 +5,6 @@ from typer.testing import CliRunner
 from trustline.cli.main import app
 
 
-def test_validate_stub_exits_nonzero(cli_runner: CliRunner) -> None:
-    """validate without --help should report not implemented."""
-    result = cli_runner.invoke(app, ["validate", "--contracts", "./examples"])
-    assert result.exit_code == 1
-    assert "not yet implemented" in result.stdout.lower()
-
-
 def test_audit_stub_exits_nonzero(cli_runner: CliRunner) -> None:
     """audit without --help should report not implemented."""
     result = cli_runner.invoke(
