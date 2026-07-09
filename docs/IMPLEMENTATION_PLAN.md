@@ -771,9 +771,7 @@ Documented in [ADR-019](adr/019-v01-audit-profile.md).
 | 6 | `README.md` | Copy-paste quickstart; v0.1 feature list |
 | 6 | `CHANGELOG.md` | v0.1.0 release notes |
 | 8 | `contributing.md` | Integration test instructions |
-| 8 | `docs/index.md` | Link to IMPLEMENTATION_PLAN / MILESTONES if useful |
-
-Do **not** update `docs/internal/` or private planning docs.
+| 8 | `docs/index.md` | Link to roadmap and architecture as needed |
 
 ---
 
@@ -786,7 +784,7 @@ Planned workflow changes (no implementation in this planning PR):
 | Integration marker | Phase 7 | `@pytest.mark.integration` + optional `@pytest.mark.snowflake` |
 | Coverage threshold | Phase 4+ | Consider `--cov-fail-under=90` when v0.1 modules dominate |
 | `workflow_dispatch` Snowflake job | Phase 7 | Manual maintainer validation with secrets |
-| `check-docs` | No change | No new forbidden patterns; grep IMPLEMENTATION_PLAN for client IP |
+| `check-docs` | No change | Legacy doc filename guard only |
 | PR size | All phases | < 400 lines changed per PR per engineering-foundation |
 
 Existing [ci.yml](../.github/workflows/ci.yml) continues running `make check` on Python 3.11–3.13.

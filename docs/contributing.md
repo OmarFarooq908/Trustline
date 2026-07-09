@@ -12,6 +12,19 @@ Thank you for your interest in contributing. This guide gets you from clone to a
 
 Optional: Snowflake credentials for integration tests (`TRUSTLINE_RUN_INTEGRATION=1`).
 
+Snowflake integration tests require:
+
+```bash
+export TRUSTLINE_RUN_INTEGRATION=1
+export SNOWFLAKE_ACCOUNT=...
+export SNOWFLAKE_USER=...
+export SNOWFLAKE_PASSWORD=...
+export SNOWFLAKE_WAREHOUSE=...
+make test-integration
+```
+
+Slack notification tests use mocked HTTP and do not require a real webhook.
+
 ## Quickstart
 
 ```bash
@@ -71,7 +84,7 @@ make coverage          # with 85% coverage gate
 make test-integration  # requires TRUSTLINE_RUN_INTEGRATION=1
 ```
 
-Use **ACME Stream** fixtures for tests and examples.
+Use `examples/acme_stream/` for tests and examples.
 
 ## Pull requests
 

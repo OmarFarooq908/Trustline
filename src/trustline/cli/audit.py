@@ -127,6 +127,28 @@ def _exit_code_for_verdict(verdict: str) -> int:
     return 1 if verdict == "fail" else 0
 
 
+def _maybe_notify_slack(
+    notify: str | None,
+    slack_webhook: str | None,
+    result: ScorecardResult,
+    *,
+    title: str,
+) -> None:
+    """Send Slack notification when configured and the audit failed."""
+    if notify is None:
+        return
+    if notify != "slack":
+        msg = f"unsupported notification channel: {notify!r}"
+        raise TrustlineError(msg)
+    if result.verdict != "fail":
+        return
+
+    from trustline.integrations.slack import notify_audit_failure, resolve_webhook_url
+
+    webhook_url = resolve_webhook_url(slack_webhook)
+    notify_audit_failure(webhook_url, result, title=title)
+
+
 @app.callback(invoke_without_command=True)
 def audit(  # noqa: PLR0913
     contracts: str = typer.Option(
@@ -170,6 +192,17 @@ def audit(  # noqa: PLR0913
         False,
         "--dry-run",
         help="Compile checks only; do not execute SQL.",
+    ),
+    notify: str | None = typer.Option(
+        None,
+        "--notify",
+        help="Notification channel on failure (slack).",
+    ),
+    slack_webhook: str | None = typer.Option(
+        None,
+        "--slack-webhook",
+        envvar="SLACK_WEBHOOK_URL",
+        help="Slack incoming webhook URL.",
     ),
 ) -> None:
     """Run the five-phase trust scorecard against contract YAML."""
@@ -228,6 +261,8 @@ def audit(  # noqa: PLR0913
             typer.echo(f"\nReports written to {reports_dir.resolve()}/")
         if output_format in {"json", "both"}:
             typer.echo(json.dumps(render_scorecard_json(result), indent=2))
+
+        _maybe_notify_slack(notify, slack_webhook, result, title=title)
 
         raise typer.Exit(code=_exit_code_for_verdict(result.verdict))
     except typer.Exit:

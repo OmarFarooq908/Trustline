@@ -449,7 +449,7 @@ No server, no database, no infrastructure to operate beyond the warehouse connec
 
 ## Related Documents
 
-- [index.md](index.md) — Product overview
+- [index.md](index.md) — Overview
 - [mvp-scope.md](mvp-scope.md) — v0.1 scope and milestones
 - [contract-spec.md](contract-spec.md) — Contract YAML specification
 - [roadmap.md](roadmap.md) — Version roadmap
