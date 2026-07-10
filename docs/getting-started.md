@@ -12,6 +12,19 @@ pip install trustline
 trustline --version
 ```
 
+### Pip-only demo (no clone)
+
+```bash
+ACME=$(python -c "from trustline.examples import acme_stream_dir; print(acme_stream_dir())")
+trustline validate --contracts "$ACME/contracts"
+trustline audit \
+  --contracts "$ACME/contracts" \
+  --target duckdb \
+  --profiles "$ACME/profiles.yml.example"
+```
+
+The audit exits `1` when seeded failures are present (expected for the bundled fixture).
+
 For development from source:
 
 ```bash
@@ -94,7 +107,9 @@ trustline audit --contracts ./contracts/ --target duckdb --notify slack
 
 ### GitHub Actions
 
-Copy [integrations/github-actions/trustline-audit.yml](../integrations/github-actions/trustline-audit.yml) into `.github/workflows/`.
+Consumer example (pip install): [examples/github-actions/trustline-audit/](../examples/github-actions/trustline-audit/).
+
+Monorepo CI reference: [integrations/github-actions/trustline-audit.yml](../integrations/github-actions/trustline-audit.yml).
 
 ## Example fixture (`examples/acme_stream/`)
 

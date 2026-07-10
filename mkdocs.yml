@@ -13,6 +13,8 @@ nav:
   - Why Trustline: why-trustline.md
   - Getting Started: getting-started.md
   - Contract Spec: contract-spec.md
+  - Patterns: patterns/README.md
+  - Stability: STABILITY.md
   - Architecture: architecture.md
   - Roadmap: roadmap.md
   - MVP Scope: mvp-scope.md

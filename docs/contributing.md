@@ -98,6 +98,17 @@ Use `examples/acme_stream/` for tests and examples.
 
 Until a second maintainer joins, the maintainer may self-merge after green `CI` and `Security` checks.
 
+## Documentation
+
+Docs in this repo are for users and contributors: tutorials, contract
+reference, architecture, patterns, and ADRs.
+
+- Use the synthetic ACME Stream examples from `examples/acme_stream/`.
+- Do not include real employer or client names, production schemas, or
+  proprietary metrics.
+- Prefer educational tone (explain the problem and the contract), not
+  marketing copy.
+
 ## Contract schema changes
 
 Breaking changes to contract YAML schema require:
