@@ -1,4 +1,4 @@
-"""Trustline — open-source trust layer for data products.
+"""Trustline — compiler for business invariants across data-product boundaries.
 
 Public API (v0.2+):
     validate: Validate contract YAML against JSON Schema

@@ -1,12 +1,16 @@
 # Trustline
 
-Trustline is a CLI that validates YAML contracts and runs a five-phase trust audit against a warehouse. Contracts describe cross-boundary checks — identity funnels, cohort definitions, and delivery coverage — that compile to SQL and produce a pass/fail scorecard.
+**Business systems fail at the boundaries. Trustline verifies the boundaries.**
+
+Trustline is a compiler for business invariants — declarative YAML contracts that compile to SQL checks and produce a measurable integrity scorecard. Contracts describe cross-boundary checks: identity funnels, cohort definitions, and delivery coverage.
 
 | | |
 |---|---|
 | Repository | [github.com/omarfarooq908/trustline](https://github.com/omarfarooq908/trustline) |
 | License | Apache 2.0 |
 | Python | 3.11+ |
+
+See [why-trustline.md](why-trustline.md) for the problem statement, positioning, and moat thesis.
 
 ## Commands
 
@@ -59,6 +63,7 @@ The `examples/acme_stream/` directory contains a DuckDB fixture with seeded chec
 
 | Document | Description |
 |----------|-------------|
+| [Why Trustline](why-trustline.md) | Problem, positioning, and moat |
 | [Getting Started](getting-started.md) | Install, CLI, example run |
 | [Contract Spec](contract-spec.md) | YAML schema and examples |
 | [Architecture](architecture.md) | Module layout and data flow |

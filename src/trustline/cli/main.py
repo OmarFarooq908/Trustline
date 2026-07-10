@@ -8,7 +8,7 @@ from trustline.cli import audit, validate
 
 app = typer.Typer(
     name="trustline",
-    help="Open-source trust layer for data products.",
+    help="Compiler for business invariants across data-product boundaries.",
     no_args_is_help=True,
 )
 
@@ -30,7 +30,7 @@ def main(
         is_eager=True,
     ),
 ) -> None:
-    """Trustline — machine-checkable contracts across ETL, ML, and delivery seams."""
+    """Trustline — compiler for business invariants across data-product boundaries."""
 
 
 app.add_typer(validate.app, name="validate")
