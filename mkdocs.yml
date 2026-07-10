@@ -10,6 +10,7 @@ theme:
 
 nav:
   - Home: index.md
+  - Why Trustline: why-trustline.md
   - Getting Started: getting-started.md
   - Contract Spec: contract-spec.md
   - Architecture: architecture.md

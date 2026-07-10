@@ -4,7 +4,13 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
-CLI for validating YAML data-product contracts and running a five-phase trust audit (DuckDB or Snowflake).
+**Business systems fail at the boundaries. Trustline verifies the boundaries.**
+
+Everything was green. Airflow passed. dbt passed. Great Expectations passed. The model passed evaluation. Customers still received the wrong data.
+
+Existing tools validate *within* systems — row counts, null checks, model metrics. Failures happen *between* systems: identity joins that silently drop records, training tables that diverge from scoring tables, scores that never reach the CRM mirror, upstream source migrations that change semantics overnight.
+
+Trustline is a **compiler for business invariants**. You declare what must remain true across those boundaries in YAML contracts; Trustline compiles them to SQL, runs them against your warehouse, and produces a measurable integrity scorecard.
 
 ## Quickstart
 
@@ -31,10 +37,19 @@ trustline audit \
 
 The example audit exits `1` — the fixture intentionally includes failing checks.
 
+## What Trustline is not
+
+- **Not an orchestrator** — integrates with Airflow and Dagster; does not replace them
+- **Not a transform framework** — extends dbt; does not replace it
+- **Not a model training runtime** — no training, inference, or feature store
+- **Not a hosted SaaS** — CLI you run in CI or on a schedule
+- **Not auto-remediation** — detects and reports; never auto-fixes
+
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
+| [Why Trustline](docs/why-trustline.md) | Problem, positioning, and moat |
 | [Getting Started](docs/getting-started.md) | Install and CLI |
 | [Overview](docs/index.md) | Commands, phases, architecture |
 | [Contract Spec](docs/contract-spec.md) | YAML schema |

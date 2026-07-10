@@ -14,6 +14,18 @@ Trustline contracts are declarative YAML files that describe trust boundaries fo
 
 ## Glossary {#glossary}
 
+### Terminology {#terminology}
+
+External docs and marketing use boundary-verification language. v0.1 CLI and JSON output retain legacy field names until a semver release.
+
+| External (docs/marketing) | Internal (v0.1 API) | Notes |
+|---------------------------|---------------------|-------|
+| Product Integrity Score | `trust_score` | Rename planned for v0.2+ with deprecation |
+| Business invariant | contract `spec` | Declarative statement of what must remain true |
+| Boundary check | scorecard phase check | Compiled SQL check at a system seam |
+
+See [why-trustline.md](why-trustline.md) for the problem statement.
+
 ### FunnelContract
 
 YAML contract defining ordered funnel stages with `expect_min_count` (first stage) or `expect_retention_pct` (subsequent stages joined from a prior stage). Compiled to stage-count and retention SQL checks.

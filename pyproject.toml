@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "trustline"
 version = "0.1.0"
-description = "Open-source trust layer for data products — machine-checkable contracts across ETL, ML, and delivery seams."
+description = "Compiler for business invariants across data-product boundaries."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"

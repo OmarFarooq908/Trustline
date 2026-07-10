@@ -86,7 +86,18 @@ Exit criteria: see [mvp-scope.md](mvp-scope.md).
 | v0.1 | `FunnelContract`, `CohortManifest` |
 | v0.2 | + `SourceSwapAnnotation` |
 | v0.3 | + `DeliveryLineageContract` |
-| v1.0 | `trustline.io/v1` frozen |
+| v1.0 | `trustline.io/v1` frozen spec |
+
+## Future contract domains
+
+Non-binding examples of domains the same compiler pattern may support:
+
+| Domain | Example invariant |
+|--------|-------------------|
+| Delivery SLA | Scores must appear in CRM mirror within 24 hours at 99% coverage |
+| LLM output | Minimum 2 citations; confidence ≥ 0.85; PII not allowed; hallucination rate ≤ 1% |
+
+AI systems are **consumers** of contracts (checks on outputs and policies), not a separate agent orchestration framework.
 
 ## Non-goals
 
@@ -95,6 +106,7 @@ Exit criteria: see [mvp-scope.md](mvp-scope.md).
 - Model training runtime
 - Hosted/managed SaaS
 - Auto-remediation
+- AI orchestration framework (contracts for LLM outputs yes; agent framework no)
 
 ## Related documents
 
