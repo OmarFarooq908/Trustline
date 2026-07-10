@@ -9,6 +9,8 @@
 
 Trustline compiles YAML contracts into SQL checks and produces a measurable integrity scorecard. See [Why Trustline](docs/why-trustline.md) for the seam problem and compiler model.
 
+![Trustline audit scorecard](docs/assets/scorecard-demo.png)
+
 ## Quickstart
 
 ```bash
