@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-10
+
+### Added
+
+- Boundary pattern catalog (`docs/patterns/`) — five cross-seam failure modes with ACME examples
+- Stability policy (`docs/STABILITY.md`) for `trustline.io/v1` contracts and CLI semver
+- ADR-021 contract diff governance (design only)
+- `trustline.examples.acme_stream_dir()` — path to bundled ACME Stream fixture in the wheel
+- Consumer GitHub Actions example (`examples/github-actions/trustline-audit/`)
+
+### Changed
+
+- ACME Stream fixture bundled in PyPI wheel (~270KB `demo.duckdb`)
+- README: north star one-liner, PyPI badge, pip-only quickstart
+- Contributor documentation section in `contributing.md`
+
 ## [0.1.0] - 2026-07-09
 
 ### Added
@@ -31,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial repository scaffold (pre-MVP)
 
-[Unreleased]: https://github.com/omarfarooq908/trustline/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/omarfarooq908/trustline/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/omarfarooq908/trustline/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/omarfarooq908/trustline/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/omarfarooq908/trustline/releases/tag/v0.0.1

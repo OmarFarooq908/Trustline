@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "trustline"
-version = "0.1.0"
+version = "0.1.1"
 description = "Compiler for business invariants across data-product boundaries."
 readme = "README.md"
 license = "Apache-2.0"
@@ -63,9 +63,17 @@ packages = ["src/trustline"]
 [tool.hatch.build.targets.wheel.force-include]
 "schemas" = "trustline/schemas"
 "templates/sql" = "trustline/templates/sql"
+"examples/acme_stream" = "trustline/examples/acme_stream"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/trustline", "schemas", "templates/sql", "README.md", "LICENSE"]
+include = [
+    "src/trustline",
+    "schemas",
+    "templates/sql",
+    "examples/acme_stream",
+    "README.md",
+    "LICENSE",
+]
 
 [tool.ruff]
 line-length = 100

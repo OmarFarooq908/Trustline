@@ -10,7 +10,7 @@ Trustline is a compiler for business invariants — declarative YAML contracts t
 | License | Apache 2.0 |
 | Python | 3.11+ |
 
-See [why-trustline.md](why-trustline.md) for the problem statement, positioning, and moat thesis.
+See [why-trustline.md](why-trustline.md) for the problem statement and compiler model.
 
 ## Commands
 
@@ -63,7 +63,9 @@ The `examples/acme_stream/` directory contains a DuckDB fixture with seeded chec
 
 | Document | Description |
 |----------|-------------|
-| [Why Trustline](why-trustline.md) | Problem, positioning, and moat |
+| [Why Trustline](why-trustline.md) | Problem statement and compiler model |
+| [Patterns](patterns/README.md) | Boundary failure catalog |
+| [Stability](STABILITY.md) | Contract and CLI semver policy |
 | [Getting Started](getting-started.md) | Install, CLI, example run |
 | [Contract Spec](contract-spec.md) | YAML schema and examples |
 | [Architecture](architecture.md) | Module layout and data flow |
