@@ -4,7 +4,7 @@ from importlib.metadata import version
 
 import typer
 
-from trustline.cli import audit, validate
+from trustline.cli import audit, init_cmd, validate
 
 app = typer.Typer(
     name="trustline",
@@ -35,3 +35,4 @@ def main(
 
 app.add_typer(validate.app, name="validate")
 app.add_typer(audit.app, name="audit")
+app.add_typer(init_cmd.app, name="init")

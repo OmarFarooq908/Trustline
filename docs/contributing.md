@@ -45,7 +45,7 @@ make check
 
 ## Development workflow
 
-1. **Find or open an issue** for non-trivial changes.
+1. **Find or open an issue** for non-trivial changes. New contributors: see [good first issues](https://github.com/omarfarooq908/trustline/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) (criteria in [triage.md](triage.md)).
 2. **Branch** from `main`: `feat/`, `fix/`, `docs/`, or `chore/` prefix.
 3. **Install hooks:** `uv run pre-commit install`
 4. **Make changes** with tests.
@@ -66,6 +66,7 @@ make check
 |--------|---------|
 | `make install-dev` | Install dependencies |
 | `make check` | All CI gates (format, lint, types, coverage) |
+| `make pre-commit` | Run all pre-commit hooks on the repo |
 | `make test` | Fast tests only |
 | `make format` | Auto-format code |
 

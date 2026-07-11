@@ -1,0 +1,35 @@
+# Validate Trustline contracts in a dbt project CI pipeline.
+# Copy to .github/workflows/trustline-validate.yml
+# Assumes contracts live at ./trustline/contracts/ (from trustline init).
+
+name: Trustline Validate
+
+on:
+  pull_request:
+    paths:
+      - "trustline/**"
+  push:
+    branches: [main]
+    paths:
+      - "trustline/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Trustline
+        run: pip install trustline
+
+      - name: Validate contract YAML
+        run: trustline validate --contracts ./trustline/contracts

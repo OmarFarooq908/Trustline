@@ -1,0 +1,34 @@
+# Problem: Population shrinks silently across identity join stages (ML training funnel).
+# Pattern: docs/patterns/identity-funnel-collapse.md
+# Next: trustline validate --contracts ./trustline/contracts
+#       trustline audit --contracts ./trustline/contracts --profiles ./trustline/profiles.yml
+apiVersion: trustline.io/v1
+kind: FunnelContract
+metadata:
+  name: {{ product_slug }}_funnel
+  product: {{ product_name }}
+  owner: {{ owner_email }}
+spec:
+  stages:
+    - name: source_population
+      description: "Base population eligible for modeling"
+      sql: "SELECT id, join_key FROM {{ ref('source_population') }}"
+      expect_min_count: 1000
+
+    - name: identity_match
+      description: "Population matched to application identity"
+      from_stage: source_population
+      join:
+        table: "{{ ref('app_users') }}"
+        "on": join_key
+        type: left
+      expect_retention_pct: 50
+
+    - name: feature_ready
+      description: "Matched users with sufficient features for training/scoring"
+      from_stage: identity_match
+      join:
+        table: "{{ ref('feature_table') }}"
+        "on": user_id
+        type: inner
+      expect_retention_pct: 25

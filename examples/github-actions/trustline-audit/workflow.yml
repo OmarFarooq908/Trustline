@@ -1,18 +1,23 @@
-# Example workflow — install Trustline from PyPI and audit bundled ACME contracts.
+# Example workflow — install Trustline from PyPI and audit your scaffolded contracts.
 # Copy to .github/workflows/trustline-audit.yml in your project.
+# Prerequisite: run `trustline init --preset ml-crm-boundary` and commit ./trustline/
 
 name: Trustline Audit
 
 on:
   pull_request:
+    paths:
+      - "trustline/**"
   push:
     branches: [main]
+    paths:
+      - "trustline/**"
 
 permissions:
   contents: read
 
 jobs:
-  audit:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -26,24 +31,36 @@ jobs:
       - name: Install Trustline
         run: pip install trustline
 
-      - name: Resolve bundled ACME paths
-        id: acme
-        run: |
-          acme=$(python -c "from trustline.examples import acme_stream_dir; print(acme_stream_dir())")
-          echo "dir=$acme" >> "$GITHUB_OUTPUT"
-
       - name: Validate contracts
-        run: trustline validate --contracts "${{ steps.acme.outputs.dir }}/contracts"
+        run: trustline validate --contracts ./trustline/contracts
 
-      - name: Run DuckDB trust audit
+  audit:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Trustline
+        run: pip install trustline
+
+      - name: Smoke test bundled demo
         run: |
           exit_code=0
-          trustline audit \
-            --contracts "${{ steps.acme.outputs.dir }}/contracts" \
-            --target duckdb \
-            --profiles "${{ steps.acme.outputs.dir }}/profiles.yml.example" \
-            || exit_code=$?
+          trustline audit --demo || exit_code=$?
           if [ "$exit_code" -ne 1 ]; then
-            echo "Expected ACME demo audit to exit 1, got ${exit_code}"
+            echo "Expected demo audit to exit 1, got ${exit_code}"
             exit "$exit_code"
           fi
+
+      - name: Compile checks for project contracts (dry run)
+        run: |
+          trustline audit \
+            --contracts ./trustline/contracts \
+            --profiles ./trustline/profiles.yml \
+            --dry-run

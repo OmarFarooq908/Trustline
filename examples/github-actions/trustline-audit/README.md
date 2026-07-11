@@ -1,32 +1,43 @@
 # Trustline audit in GitHub Actions (consumer)
 
-Copy this example into your repository's `.github/workflows/` directory. It installs Trustline from PyPI and runs validate + audit against the bundled ACME Stream fixture.
+Copy this example into your repository's `.github/workflows/` directory. It validates your `./trustline/` contracts and smoke-tests the bundled demo.
 
 ## Setup
 
-1. Copy `workflow.yml` to `.github/workflows/trustline-audit.yml`.
-2. Adjust `contracts` and `profiles` paths to your own contracts when ready.
+1. Scaffold contracts in your repo:
 
-## Demo behavior
+   ```bash
+   trustline init --preset ml-crm-boundary --non-interactive
+   git add trustline/
+   ```
 
-The bundled ACME fixture **intentionally fails** audit (exit code `1`). This workflow treats exit `1` as success for the demo — it proves Trustline detected seeded failures.
+2. Copy `workflow.yml` to `.github/workflows/trustline-audit.yml`.
 
-For production contracts, fail the job when `trustline audit` exits non-zero:
+## What the workflow does
+
+| Job | Step | Purpose |
+|-----|------|---------|
+| `validate` | `trustline validate` | Schema-check contract YAML on every PR |
+| `audit` | `trustline audit --demo` | Smoke-test PyPI install (exit `1` expected) |
+| `audit` | `trustline audit --dry-run` | Compile SQL for your contracts without a warehouse |
+
+## Production audit against your warehouse
+
+Add a job with warehouse credentials and fail on non-zero exit:
 
 ```yaml
 - name: Run trust audit
   run: |
     trustline audit \
-      --contracts ./contracts/ \
-      --target duckdb \
-      --profiles ./profiles.yml
+      --contracts ./trustline/contracts \
+      --profiles ./trustline/profiles.yml
 ```
 
-## Production notes
+Use `pip install 'trustline[snowflake]'` and `SNOWFLAKE_*` secrets for Snowflake targets.
 
-- Use `pip install 'trustline[snowflake]'` for Snowflake targets.
-- Store `SNOWFLAKE_*` credentials as GitHub Actions secrets.
-- Run `trustline validate` on every PR; run full audit on merge or schedule.
+## dbt projects
+
+See [examples/dbt-ci/](../../dbt-ci/README.md) for validate-only CI without warehouse access.
 
 ## Monorepo development
 

@@ -1,0 +1,16 @@
+# Problem: ML scores land in a push queue but CRM mirror coverage is unknown.
+# Pattern: docs/patterns/queue-vs-state.md and docs/patterns/source-swap.md
+# Next: place this file as audit_profile.yaml sibling to contracts/
+crm_coverage:
+  sync_table: "{{ ref('score_push_queue') }}"
+  mirror_table: "{{ ref('crm_contacts_mirror') }}"
+  expect_sync_pct: 95
+source_swap:
+  table: "{{ ref('user_events') }}"
+  migration:
+    from_source: LegacySource
+    to_source: NewSource
+    cutover_date: "{{ cutover_date }}"
+  volume_threshold_pct: 10
+score_distribution:
+  table: "{{ ref('model_scores_staging') }}"

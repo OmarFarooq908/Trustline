@@ -31,3 +31,10 @@ def test_audit_help_exits_zero(cli_runner: CliRunner) -> None:
     result = cli_runner.invoke(app, ["audit", "--help"])
     assert result.exit_code == 0
     assert "audit" in result.stdout.lower()
+
+
+def test_init_help_exits_zero(cli_runner: CliRunner) -> None:
+    """init --help should succeed."""
+    result = cli_runner.invoke(app, ["init", "--help"])
+    assert result.exit_code == 0
+    assert "preset" in result.stdout.lower()

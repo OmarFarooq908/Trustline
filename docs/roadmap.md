@@ -7,29 +7,31 @@ Feature roadmap with coarse milestones.
 | Version | Theme | Key deliverable |
 |---------|-------|-----------------|
 | **v0.1** | Trust Scorecard CLI | Five-phase audit against Snowflake/DuckDB |
-| **v0.2** | Contract authoring | dbt macro, source swap detector, BigQuery/Postgres |
-| **v0.3** | Delivery lineage | CRM mirror checks, transfer pack, Airflow operator |
+| **v0.2** | Contract authoring | `init`, templates, `--demo`, quick-start docs |
+| **v0.3** | Integrations & adapters | dbt macro, BigQuery/Postgres, Python API, GHA PR comments |
+| **v0.4** | Delivery lineage | `DeliveryLineageContract`, transfer pack, Airflow operator |
 | **v0.5** | Ecosystem | Dagster integration, DataHub export |
 | **v1.0** | Production ready | Web UI, stable API, multi-maintainer governance |
 
 ## Feature matrix
 
-| Feature | v0.1 | v0.2 | v0.3 | v0.5 | v1.0 |
-|---------|------|------|------|------|------|
-| Trust Scorecard CLI | Yes | Enhanced | — | — | Stable API |
-| Funnel contracts | Read | Author + dbt macro | — | — | — |
-| Cohort manifests | Read | Full spec + drift detect | — | — | — |
-| Source swap detector | Partial (P3) | Standalone | — | — | — |
-| ML delivery lineage | — | Basic | Full CRM check | — | — |
-| Transfer pack generator | — | — | Yes | Enhanced | — |
-| Snowflake adapter | Yes | Yes | Yes | Yes | Yes |
-| DuckDB adapter | Yes | Yes | Yes | Yes | Yes |
-| BigQuery adapter | — | Yes | Yes | Yes | Yes |
-| Postgres adapter | — | Yes | — | Yes | Yes |
-| Airflow operator | — | — | Yes | — | — |
-| Dagster integration | — | — | — | Yes | — |
-| Web UI (read-only) | — | — | — | — | Yes |
-| Python library API | — | Yes | — | — | Stable |
+| Feature | v0.1 | v0.2 | v0.3 | v0.4 | v0.5 | v1.0 |
+|---------|------|------|------|------|------|------|
+| Trust Scorecard CLI | Yes | `--demo`, error hints | — | — | — | Stable API |
+| `trustline init` + templates | — | Yes | — | — | — | — |
+| Funnel contracts | Read | Author via presets | dbt macro | — | — | — |
+| Cohort manifests | Read | Author via presets | Drift detect | — | — | — |
+| Source swap (audit_profile) | Partial | Templates | Standalone tool | — | — | — |
+| BigQuery adapter | — | — | Yes | Yes | Yes | Yes |
+| Postgres adapter | — | — | Yes | — | Yes | Yes |
+| Python library API | — | — | Yes | — | — | Stable |
+| GHA consumer workflow | Basic | Own-contracts example | PR comment | — | — | — |
+| dbt CI validate recipe | — | Yes (v0.2.1) | Macro | — | — | — |
+| Airflow operator | — | Example DAG (docs) | Operator | — | — | — |
+| Snowflake adapter | Yes | Profile stub in init | Yes | Yes | Yes | Yes |
+| DuckDB adapter | Yes | Yes | Yes | Yes | Yes | Yes |
+| Dagster integration | — | — | — | — | Yes | — |
+| Web UI (read-only) | — | — | — | — | — | Yes |
 
 ## v0.1 — Trust Scorecard CLI
 
@@ -43,16 +45,27 @@ Exit criteria: see [mvp-scope.md](mvp-scope.md).
 
 ## v0.2 — Contract authoring
 
+- `trustline audit --demo` — bundled ACME without path flags
+- `trustline init --preset` — scaffold `./trustline/` workspace
+- Contract template library (3 presets: ml-crm-boundary, funnel-retention, cohort-source-parity)
+- Actionable CLI error hints
+- Quick-start path in getting-started and ACME demo doc
+- Pattern ↔ template ↔ check matrix
+
+Deferred to v0.2.1+: dbt CI recipe, GHA workflow for user contracts, Snowflake profile docs polish.
+
+Deferred to v0.3+: dbt macro, BigQuery/Postgres, Python library API, GHA PR comment scorecard, new contract kinds.
+
+## v0.3 — Integrations & adapters
+
 - `trustline_funnel` dbt macro
-- Standalone source swap detector
 - BigQuery and Postgres adapters
 - Python library API (`from trustline import audit, validate`)
 - GitHub Actions PR comment with scorecard
 
-## v0.3 — Delivery lineage
+## v0.4 — Delivery lineage
 
 - `DeliveryLineageContract`
-- CRM mirror coverage check
 - Transfer pack generator (`trustline transfer-pack`)
 - Airflow `TrustlineAuditOperator`
 
@@ -72,32 +85,24 @@ Exit criteria: see [mvp-scope.md](mvp-scope.md).
 
 ## Integration priority
 
-1. dbt macros (v0.2)
-2. GitHub Actions (v0.1 basic, v0.2 PR comments)
-3. Slack (v0.1 webhook, v0.2 contract alerts)
-4. Airflow (v0.3)
-5. DataHub export (v0.5)
-6. Dagster (v0.5)
+1. Bundled demo + init templates (v0.2.0)
+2. GitHub Actions consumer workflow for own contracts (v0.2.1)
+3. dbt CI `trustline validate` recipe (v0.2.1)
+4. dbt macros (v0.3)
+5. Airflow example DAG (v0.2.1 docs) → operator (v0.4)
+6. GHA PR comment scorecard (v0.3)
+7. DataHub / Dagster (v0.5)
 
 ## Contract spec roadmap
 
 | Version | Contract kinds |
 |---------|----------------|
-| v0.1 | `FunnelContract`, `CohortManifest` |
-| v0.2 | + `SourceSwapAnnotation` |
-| v0.3 | + `DeliveryLineageContract` |
+| v0.1 | `FunnelContract`, `CohortManifest`, `audit_profile.yaml` |
+| v0.3 | + `SourceSwapAnnotation` (if production adopters require) |
+| v0.4 | + `DeliveryLineageContract` |
 | v1.0 | `trustline.io/v1` frozen spec |
 
-## Future contract domains
-
-Non-binding examples of domains the same compiler pattern may support:
-
-| Domain | Example invariant |
-|--------|-------------------|
-| Delivery SLA | Scores must appear in CRM mirror within 24 hours at 99% coverage |
-| LLM output | Minimum 2 citations; confidence ≥ 0.85; PII not allowed; hallucination rate ≤ 1% |
-
-AI systems are **consumers** of contracts (checks on outputs and policies), not a separate agent orchestration framework.
+No new contract kinds in v0.2 without two production examples ([STABILITY.md](STABILITY.md)).
 
 ## Non-goals
 
@@ -111,6 +116,8 @@ AI systems are **consumers** of contracts (checks on outputs and policies), not 
 ## Related documents
 
 - [mvp-scope.md](mvp-scope.md) — v0.1 scope
+- [acme-demo.md](acme-demo.md) — ACME fixture walkthrough
 - [architecture.md](architecture.md) — Technical design
 - [contract-spec.md](contract-spec.md) — Contract API
+- [adr/022-trustline-init.md](adr/022-trustline-init.md) — Init workspace layout
 - [adr/](adr/) — Technical decision records

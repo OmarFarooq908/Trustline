@@ -15,7 +15,7 @@ def test_version_fallback_when_package_not_found() -> None:
         import trustline as tl
 
         importlib.reload(tl)
-        assert tl.__version__ == "0.1.1"
+        assert tl.__version__ == "0.2.0"
 
     # Restore normal version after reload side effects
     import importlib

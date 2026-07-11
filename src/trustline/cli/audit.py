@@ -9,6 +9,7 @@ from typing import Annotated, Literal
 
 import typer
 
+from trustline.cli import hints
 from trustline.compiler.audit_profile import compile_audit_profile_checks
 from trustline.compiler.cohort import compile_cohort_checks
 from trustline.compiler.funnel import compile_funnel_checks
@@ -65,12 +66,19 @@ def _compile_checks(
     return checks
 
 
+def _resolve_demo_paths() -> tuple[Path, Path]:
+    """Return (contracts_dir, profiles_path) for the bundled ACME demo."""
+    from trustline.examples import acme_stream_dir
+
+    root = acme_stream_dir()
+    return root / "contracts", root / "profiles.yml.example"
+
+
 def _build_executor(profile: Profile, profiles_path: Path) -> Executor:
     if profile.target == "duckdb":
         database = resolve_duckdb_path(profile, profiles_path)
         if not database.is_file():
-            msg = f"DuckDB database not found: {database}"
-            raise TrustlineError(msg)
+            raise TrustlineError(hints.hint_missing_duckdb(database, profiles_path))
         return DuckDBExecutor(database)
     if profile.target == "snowflake":
         from trustline.executors.snowflake import SnowflakeExecutor
@@ -78,6 +86,11 @@ def _build_executor(profile: Profile, profiles_path: Path) -> Executor:
         return SnowflakeExecutor.from_env(profile)
     msg = f"unsupported warehouse target: {profile.target!r}"
     raise TrustlineError(msg)
+
+
+def _trustline_error_message(exc: TrustlineError) -> str:
+    """Return user-facing error text, preserving multi-line hints."""
+    return str(exc)
 
 
 def _print_text_summary(
@@ -188,22 +201,43 @@ def audit(  # noqa: PLR0913
         "--no-color",
         help="Disable ANSI colors in terminal output.",
     ),
+    demo: bool = typer.Option(
+        False,
+        "--demo",
+        help="Run audit against bundled ACME Stream fixture (DuckDB).",
+    ),
 ) -> None:
     """Run the five-phase trust scorecard against contract YAML."""
     try:
+        if demo:
+            demo_contracts, demo_profiles = _resolve_demo_paths()
+            contracts = str(demo_contracts)
+            profiles_path = str(demo_profiles)
+            target = "duckdb"
+            profile_name = "default"
+            typer.echo(hints.DEMO_BANNER)
+
         contracts_dir = Path(contracts)
         if not contracts_dir.is_dir():
-            typer.echo(f"ERROR: contracts directory not found: {contracts_dir}", err=True)
+            typer.echo(hints.hint_missing_contracts_dir(contracts_dir), err=True)
             raise typer.Exit(code=2)
 
         resolved_profiles = resolve_profiles_path(
             Path(profiles_path) if profiles_path is not None else None
         )
         if not resolved_profiles.is_file():
-            typer.echo(f"ERROR: profiles file not found: {resolved_profiles}", err=True)
+            typer.echo(hints.hint_missing_profiles(resolved_profiles), err=True)
             raise typer.Exit(code=2)
 
-        profile = load_profile(profile_name, resolved_profiles)
+        try:
+            profile = load_profile(profile_name, resolved_profiles)
+        except TrustlineError as exc:
+            if "profile not found" in str(exc):
+                typer.echo(hints.hint_profile_not_found(profile_name), err=True)
+            else:
+                typer.echo(f"ERROR: {exc}", err=True)
+            raise typer.Exit(code=2) from exc
+
         if profile.target != target:
             typer.echo(
                 f"ERROR: profile {profile_name!r} target {profile.target!r} "
@@ -214,7 +248,7 @@ def audit(  # noqa: PLR0913
 
         documents = load_contracts_dir(contracts_dir)
         if not documents:
-            typer.echo("ERROR: no contract files found.", err=True)
+            typer.echo(hints.hint_no_contract_files(), err=True)
             raise typer.Exit(code=2)
 
         audit_path = (
@@ -255,7 +289,11 @@ def audit(  # noqa: PLR0913
         typer.echo(f"ERROR: {exc}", err=True)
         raise typer.Exit(code=2) from exc
     except (ValidationError, TrustlineError, AuditError) as exc:
-        typer.echo(f"ERROR: {exc}", err=True)
+        message = _trustline_error_message(exc) if isinstance(exc, TrustlineError) else str(exc)
+        if isinstance(exc, TrustlineError) and "missing duckdb_path" in message:
+            typer.echo(hints.hint_missing_duckdb_path(profile_name), err=True)
+        else:
+            typer.echo(message if message.startswith("ERROR:") else f"ERROR: {message}", err=True)
         raise typer.Exit(code=2) from exc
     except ExecutorError as exc:
         logger.exception("audit executor failure")

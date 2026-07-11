@@ -1,0 +1,29 @@
+# Problem: Training and scoring read from different feature tables without anyone noticing.
+# Pattern: docs/patterns/training-serving-divergence.md
+# Next: trustline validate --contracts ./trustline/contracts
+#       trustline audit --contracts ./trustline/contracts --profiles ./trustline/profiles.yml
+apiVersion: trustline.io/v1
+kind: CohortManifest
+metadata:
+  name: {{ product_slug }}-training-cohort
+  product: {{ product_name }}
+  owner: {{ owner_email }}
+spec:
+  observation_window:
+    start: "{{ observation_start }}"
+    end: "{{ observation_end }}"
+  outcome_window:
+    start: "{{ outcome_start }}"
+    end: "{{ outcome_end }}"
+  label:
+    definition: "Positive label for model training — edit SQL for your outcome"
+    sql: |
+      CASE WHEN outcome_flag = 1 THEN 1 ELSE 0 END
+  sources:
+    training: "{{ ref('features_training') }}"
+    scoring: "{{ ref('features_scoring') }}"
+  expected_positive_rate: 0.10
+  positive_rate_tolerance: 0.02
+  frozen_at: "{{ frozen_at }}"
+  notes: |
+    Update windows and label SQL after model review. Set frozen_at when cohort is locked.

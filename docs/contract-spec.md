@@ -612,6 +612,26 @@ spec:
 
 ---
 
+## Template library
+
+Bundled presets scaffold starter contracts via `trustline init`. Template sources ship in the PyPI wheel under `trustline/templates/contracts/`.
+
+| Preset | Contract files | Pattern doc |
+|--------|----------------|-------------|
+| `ml-crm-boundary` | `funnel_retention.yaml`, `cohort_source_parity.yaml`, `audit_profile_ml_crm.yaml` | [patterns/README.md](patterns/README.md) |
+| `funnel-retention` | `funnel_retention.yaml` | [identity-funnel-collapse.md](patterns/identity-funnel-collapse.md) |
+| `cohort-source-parity` | `cohort_source_parity.yaml` | [training-serving-divergence.md](patterns/training-serving-divergence.md) |
+
+```bash
+trustline init --list-presets
+trustline init --preset ml-crm-boundary --non-interactive
+trustline validate --contracts ./trustline/contracts
+```
+
+Walkthroughs: [use-cases.md](use-cases.md). Catalog: [examples/templates/README.md](../examples/templates/README.md).
+
+---
+
 ## `ref()` Syntax
 
 Contracts use dbt-compatible `ref()` syntax for table references:
@@ -627,7 +647,7 @@ At compile time, Trustline resolves `ref()` to fully qualified table names using
 | `database: ANALYTICS, schema: CURATED` | `ANALYTICS.CURATED.donor_gifts` |
 | DuckDB local | `main.donor_gifts` |
 
-In v0.1, resolution is manual via `profiles.yml`. In v0.2, the dbt macro provides automatic resolution from `manifest.json`.
+In v0.1, resolution is manual via `profiles.yml`. In v0.3, the dbt macro provides automatic resolution from `manifest.json`.
 
 ---
 

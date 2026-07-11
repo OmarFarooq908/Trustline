@@ -182,3 +182,46 @@ def test_audit_unsupported_notify_channel_exits_2(cli_runner: CliRunner) -> None
     )
     assert result.exit_code == 2
     assert "unsupported notification channel" in result.stderr
+
+
+def test_audit_demo_runs_acme_fixture(cli_runner: CliRunner, tmp_path: Path) -> None:
+    """audit --demo should run bundled ACME without extra flags."""
+    output_dir = tmp_path / "reports"
+    result = cli_runner.invoke(
+        app,
+        ["audit", "--demo", "--output-dir", str(output_dir)],
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 1
+    assert "Demo audit" in result.stdout
+    assert "Overall Trust Score" in result.stdout
+    payload = json.loads((output_dir / "scorecard.json").read_text(encoding="utf-8"))
+    assert payload["verdict"] == "fail"
+
+
+def test_audit_demo_shows_banner(cli_runner: CliRunner) -> None:
+    """Demo banner should mention expected exit code 1."""
+    result = cli_runner.invoke(app, ["audit", "--demo", "--dry-run"])
+    assert result.exit_code == 0
+    assert "exit code 1 is expected" in result.stdout
+
+
+def test_audit_missing_contracts_dir_shows_hint(cli_runner: CliRunner) -> None:
+    """Missing contracts directory should include init hint."""
+    result = cli_runner.invoke(
+        app,
+        ["audit", "--contracts", "/path/does/not/exist", "--profiles", str(ACME_PROFILES)],
+    )
+    assert result.exit_code == 2
+    assert "trustline init" in result.stderr
+    assert "trustline audit --demo" in result.stderr
+
+
+def test_audit_missing_profiles_shows_hint(cli_runner: CliRunner) -> None:
+    """Missing profiles file should suggest demo or init."""
+    result = cli_runner.invoke(
+        app,
+        ["audit", "--contracts", str(ACME_CONTRACTS), "--profiles", "/no/profiles.yml"],
+    )
+    assert result.exit_code == 2
+    assert "trustline audit --demo" in result.stderr

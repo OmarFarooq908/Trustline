@@ -1,4 +1,4 @@
-.PHONY: install-dev lint format format-check typecheck test test-integration coverage check clean
+.PHONY: install-dev lint format format-check typecheck test test-integration coverage pre-commit check clean
 
 UV ?= uv
 
@@ -25,6 +25,9 @@ test-integration:
 
 coverage:
 	$(UV) run pytest tests/ -m "not integration" --cov=trustline --cov-report=term-missing --cov-fail-under=85
+
+pre-commit:
+	$(UV) run pre-commit run --all-files
 
 check: format-check lint typecheck coverage
 

@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-10
+
+### Added
+
+- `trustline audit --demo` — run bundled ACME Stream fixture without path flags
+- `trustline init --preset` — scaffold `./trustline/` from bundled templates
+- `trustline init --list-presets` — list bundled template presets
+- Contract template presets: `ml-crm-boundary`, `funnel-retention`, `cohort-source-parity`
+- Actionable CLI error hints for common audit failures
+- ADR-022 trustline init workspace layout
+- [ACME demo](docs/acme-demo.md), [use cases](docs/use-cases.md), and quick-start path in getting-started
+- Pattern ↔ template ↔ check matrix in [docs/patterns/README.md](docs/patterns/README.md)
+- Root [CONTRIBUTING.md](CONTRIBUTING.md) pointer and `make pre-commit` target
+- dbt CI validate example ([examples/dbt-ci/](examples/dbt-ci/))
+- GitHub Actions consumer workflow for `./trustline/` contracts
+- Snowflake profile stub in init output and getting-started env var table
+
+### Changed
+
+- README quickstart: `trustline audit --demo` replaces Python one-liner; adds when-to-use table
+- Roadmap reprioritized: v0.2 focuses on contract authoring (BigQuery/dbt macro deferred to v0.3)
+
 ## [0.1.1] - 2026-07-10
 
 ### Added
@@ -47,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial repository scaffold (pre-MVP)
 
-[Unreleased]: https://github.com/omarfarooq908/trustline/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/omarfarooq908/trustline/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/omarfarooq908/trustline/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/omarfarooq908/trustline/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/omarfarooq908/trustline/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/omarfarooq908/trustline/releases/tag/v0.0.1

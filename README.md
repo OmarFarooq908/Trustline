@@ -9,23 +9,38 @@
 
 Trustline compiles YAML contracts into SQL checks and produces a measurable integrity scorecard. See [Why Trustline](docs/why-trustline.md) for the seam problem and compiler model.
 
-![Trustline audit scorecard](docs/assets/scorecard-demo.png)
-
 ## Quickstart
 
 ```bash
 pip install trustline
-ACME=$(python -c "from trustline.examples import acme_stream_dir; print(acme_stream_dir())")
-trustline validate --contracts "$ACME/contracts"
-trustline audit \
-  --contracts "$ACME/contracts" \
-  --target duckdb \
-  --profiles "$ACME/profiles.yml.example"
+trustline audit --demo
 ```
 
-The example audit exits `1` — the fixture intentionally includes failing checks.
+The demo audit exits `1` — seeded failures are intentional. See [ACME demo](docs/acme-demo.md).
+
+Scaffold contracts for your product:
+
+```bash
+trustline init --preset ml-crm-boundary --non-interactive
+trustline validate --contracts ./trustline/contracts
+```
 
 Contributors: clone the repo and run `make install-dev`. See [Getting Started](docs/getting-started.md).
+
+![Trustline audit scorecard](docs/assets/scorecard-demo.png)
+
+## When to use Trustline
+
+Use Trustline when you need to **verify seams** between systems — not to orchestrate pipelines or train models:
+
+| Scenario | Init preset |
+|----------|-------------|
+| ML scores must land in CRM with expected coverage | `ml-crm-boundary` |
+| Training and scoring read from different feature tables | `cohort-source-parity` |
+| Identity funnel retention drops across join stages | `funnel-retention` |
+| Block merges on invalid contract YAML in CI | `trustline validate` (no preset) |
+
+List presets: `trustline init --list-presets`. Pattern details: [Patterns](docs/patterns/README.md). Walkthroughs: [Use cases](docs/use-cases.md).
 
 ## What Trustline is not
 
@@ -41,10 +56,14 @@ Contributors: clone the repo and run `make install-dev`. See [Getting Started](d
 |----------|-------------|
 | [Why Trustline](docs/why-trustline.md) | Problem statement and compiler model |
 | [Patterns](docs/patterns/README.md) | Boundary failure catalog |
+| [Use cases](docs/use-cases.md) | Common adoption walkthroughs |
 | [Stability](docs/STABILITY.md) | Contract and CLI semver policy |
-| [Getting Started](docs/getting-started.md) | Install and CLI |
+| [Getting Started](docs/getting-started.md) | Install, quick start, CLI |
+| [ACME demo](docs/acme-demo.md) | Bundled fixture and `--demo` |
 | [Overview](docs/index.md) | Commands, phases, architecture |
 | [Contract Spec](docs/contract-spec.md) | YAML schema |
+| [Roadmap](docs/roadmap.md) | Planned versions |
+| [Examples](examples/templates/README.md) | Init presets and templates |
 | [Contributing](docs/contributing.md) | Development |
 
 ## Development

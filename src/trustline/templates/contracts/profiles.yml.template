@@ -1,0 +1,14 @@
+# Copy to profiles.yml. duckdb_path is relative to this file's directory.
+
+default:
+  target: duckdb
+  database: main
+  schema: main
+  duckdb_path: ./demo.duckdb
+
+# Uncomment and set SNOWFLAKE_* env vars for production audits.
+# Required: SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_WAREHOUSE
+# acme_prod:
+#   target: snowflake
+#   database: ANALYTICS
+#   schema: ML_STAGING

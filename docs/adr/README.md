@@ -22,5 +22,6 @@ Technical ADRs documenting implementation decisions for Trustline.
 | [018](018-coverage-threshold.md) | 85% coverage threshold |
 | [019](019-v01-audit-profile.md) | v0.1 audit profile and DuckDB-first executor |
 | [021](021-contract-diff-governance.md) | Contract diff governance (proposed, design only) |
+| [022](022-trustline-init.md) | trustline init workspace layout |
 
 New ADRs: add a file under `docs/adr/` and update this index. Breaking changes require an RFC (see [triage.md](../triage.md)).

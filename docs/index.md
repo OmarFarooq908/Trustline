@@ -15,12 +15,14 @@ See [why-trustline.md](why-trustline.md) for the problem statement and compiler 
 ## Commands
 
 ```bash
-trustline validate --contracts ./contracts/
-trustline audit --contracts ./contracts/ --target duckdb
-trustline audit --contracts ./contracts/ --target snowflake --profile acme_prod
+trustline audit --demo
+trustline init --preset ml-crm-boundary --non-interactive
+trustline validate --contracts ./trustline/contracts
+trustline audit --contracts ./trustline/contracts --target duckdb
+trustline audit --contracts ./trustline/contracts --target snowflake --profile acme_prod
 ```
 
-See [getting-started.md](getting-started.md) for install and options.
+See [getting-started.md](getting-started.md) for install and quick start.
 
 ## Contract kinds (v0.1)
 
@@ -66,7 +68,9 @@ The `examples/acme_stream/` directory contains a DuckDB fixture with seeded chec
 | [Why Trustline](why-trustline.md) | Problem statement and compiler model |
 | [Patterns](patterns/README.md) | Boundary failure catalog |
 | [Stability](STABILITY.md) | Contract and CLI semver policy |
-| [Getting Started](getting-started.md) | Install, CLI, example run |
+| [Getting Started](getting-started.md) | Install, quick start, CLI |
+| [Use cases](use-cases.md) | Common adoption walkthroughs |
+| [ACME demo](acme-demo.md) | Bundled `--demo` fixture |
 | [Contract Spec](contract-spec.md) | YAML schema and examples |
 | [Architecture](architecture.md) | Module layout and data flow |
 | [MVP Scope](mvp-scope.md) | v0.1 deliverables |
